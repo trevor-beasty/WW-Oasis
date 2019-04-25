@@ -16,7 +16,7 @@ public protocol ViewDefinition {
     associatedtype ViewAction
 }
 
-public protocol StoreProtocol: StoreDefinition, StateBindable {
+public protocol StoreProtocol: StoreDefinition, StateBindable, ObjectBindable {
     func handleAction(_ action: Action)
     func observeStatefulOutput(_ observer: @escaping (Output, State) -> Void)
 }
@@ -27,6 +27,7 @@ open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definit
     
     public private(set) var stateBinder: Binder<State>
     private var stateObservers: [(State) -> Void] = []
+    public let objectBinder = ObjectBinder()
     
     public static func create(with initialState: State) -> AnyStore<Store<Definition>> {
         let store = self.init(initialState: initialState)

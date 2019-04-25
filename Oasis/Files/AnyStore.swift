@@ -33,6 +33,10 @@ public class AnyStore<Store: StoreProtocol>: StoreProtocol {
         return store.stateBinder
     }
     
+    public var objectBinder: ObjectBinder {
+        return store.objectBinder
+    }
+    
 }
 
 extension StoreProtocol {
