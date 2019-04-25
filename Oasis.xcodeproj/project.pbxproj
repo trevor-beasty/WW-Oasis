@@ -20,6 +20,7 @@
 		E253AC6C227247FF00853431 /* Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC6B227247FF00853431 /* Module.swift */; };
 		E253AC6E2272493A00853431 /* ObjectBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC6D2272493A00853431 /* ObjectBinding.swift */; };
 		E253AC7022724ECB00853431 /* Updatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC6F22724ECB00853431 /* Updatable.swift */; };
+		E253AC722272509A00853431 /* FlowContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC712272509A00853431 /* FlowContext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		E253AC6B227247FF00853431 /* Module.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Module.swift; sourceTree = "<group>"; };
 		E253AC6D2272493A00853431 /* ObjectBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectBinding.swift; sourceTree = "<group>"; };
 		E253AC6F22724ECB00853431 /* Updatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updatable.swift; sourceTree = "<group>"; };
+		E253AC712272509A00853431 /* FlowContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowContext.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,7 @@
 				E253AC6B227247FF00853431 /* Module.swift */,
 				E253AC6D2272493A00853431 /* ObjectBinding.swift */,
 				E253AC6F22724ECB00853431 /* Updatable.swift */,
+				E253AC712272509A00853431 /* FlowContext.swift */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -227,6 +230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E253AC6E2272493A00853431 /* ObjectBinding.swift in Sources */,
+				E253AC722272509A00853431 /* FlowContext.swift in Sources */,
 				E253AC682272479C00853431 /* StoreAdapter.swift in Sources */,
 				E253AC3F227225AB00853431 /* AppDelegate.swift in Sources */,
 				E253AC7022724ECB00853431 /* Updatable.swift in Sources */,
