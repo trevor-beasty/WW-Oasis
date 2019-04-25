@@ -21,11 +21,7 @@ public final class Binder<Value> {
         self.value = value
     }
     
-    internal func update(with newValue: Value) {
-        set(newValue: newValue)
-    }
-    
-    private func set(newValue: Value) {
+    internal func set(newValue: Value) {
         let oldValue = value
         value = newValue
         let _observations = observations
@@ -40,14 +36,14 @@ public protocol StateBindable: AnyObject {
     associatedtype R
     
     var stateBinder: Binder<State> { get }
-    var transform: (State) -> R { get }
+    var stateTransform: (State) -> R { get }
 }
 
 extension StateBindable {
     
     public func bind(_ handler: @escaping ChangeHandler<R>) {
-        handler(nil, transform(stateBinder.value))
-        let _transform = transform
+        handler(nil, stateTransform(stateBinder.value))
+        let _transform = stateTransform
         stateBinder.observations.append({ oldValue, newValue in
             handler(oldValue.flatMap({ _transform($0) }), _transform(newValue))
         })
@@ -70,13 +66,17 @@ extension StateBindable {
         }
     }
     
+    public var state: State {
+        return stateBinder.value
+    }
+    
 }
 
 extension StateBindable where R: Equatable {
     
     public func bind(_ handler: @escaping ChangeHandler<R>) {
-        handler(nil, transform(stateBinder.value))
-        let _transform = transform
+        handler(nil, stateTransform(stateBinder.value))
+        let _transform = stateTransform
         stateBinder.observations.append({ oldValue, newValue in
             guard oldValue.flatMap({ _transform($0) }) != _transform(newValue) else { return }
             handler(oldValue.flatMap({ _transform($0) }), _transform(newValue))
@@ -87,8 +87,12 @@ extension StateBindable where R: Equatable {
 
 extension StateBindable where State == R {
     
-    public var transform: (State) -> R {
+    public var stateTransform: (State) -> R {
         return { state in return state }
     }
     
+    public func update(with newValue: State) {
+        stateBinder.set(newValue: newValue)
+    }
+
 }

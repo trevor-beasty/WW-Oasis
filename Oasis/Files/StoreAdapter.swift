@@ -40,7 +40,7 @@ internal class StoreAdapter<_StoreDefinition: StoreDefinition, _ViewDefinition: 
         return store.stateBinder
     }
     
-    var transform: (State) -> ViewState {
+    var stateTransform: (State) -> ViewState {
         return stateMap
     }
     
