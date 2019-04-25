@@ -9,3 +9,7 @@
 import Foundation
 
 internal let abstractMethodMessage = "abstract method must be overriden by subclass"
+
+internal func emit(_ execute: @escaping () -> Void) {
+    DispatchQueue.main.async(execute: execute)
+}

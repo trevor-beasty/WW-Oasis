@@ -15,6 +15,9 @@
 		E253AC62227242F600853431 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC61227242F600853431 /* Store.swift */; };
 		E253AC642272434500853431 /* StateBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC632272434500853431 /* StateBinding.swift */; };
 		E253AC66227245BA00853431 /* Abstract.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC65227245BA00853431 /* Abstract.swift */; };
+		E253AC682272479C00853431 /* StoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC672272479C00853431 /* StoreAdapter.swift */; };
+		E253AC6A227247B900853431 /* AnyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC69227247B900853431 /* AnyStore.swift */; };
+		E253AC6C227247FF00853431 /* Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC6B227247FF00853431 /* Module.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,9 @@
 		E253AC61227242F600853431 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		E253AC632272434500853431 /* StateBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBinding.swift; sourceTree = "<group>"; };
 		E253AC65227245BA00853431 /* Abstract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Abstract.swift; sourceTree = "<group>"; };
+		E253AC672272479C00853431 /* StoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreAdapter.swift; sourceTree = "<group>"; };
+		E253AC69227247B900853431 /* AnyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyStore.swift; sourceTree = "<group>"; };
+		E253AC6B227247FF00853431 /* Module.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Module.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,8 +110,11 @@
 			isa = PBXGroup;
 			children = (
 				E253AC61227242F600853431 /* Store.swift */,
+				E253AC672272479C00853431 /* StoreAdapter.swift */,
 				E253AC632272434500853431 /* StateBinding.swift */,
 				E253AC65227245BA00853431 /* Abstract.swift */,
+				E253AC69227247B900853431 /* AnyStore.swift */,
+				E253AC6B227247FF00853431 /* Module.swift */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -211,9 +220,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E253AC682272479C00853431 /* StoreAdapter.swift in Sources */,
 				E253AC3F227225AB00853431 /* AppDelegate.swift in Sources */,
 				E253AC66227245BA00853431 /* Abstract.swift in Sources */,
 				E253AC642272434500853431 /* StateBinding.swift in Sources */,
+				E253AC6C227247FF00853431 /* Module.swift in Sources */,
+				E253AC6A227247B900853431 /* AnyStore.swift in Sources */,
 				E253AC62227242F600853431 /* Store.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
