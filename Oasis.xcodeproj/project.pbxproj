@@ -1,0 +1,466 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E253AC3F227225AB00853431 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC3E227225AB00853431 /* AppDelegate.swift */; };
+		E253AC41227225AB00853431 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC40227225AB00853431 /* ViewController.swift */; };
+		E253AC44227225AB00853431 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E253AC42227225AB00853431 /* Main.storyboard */; };
+		E253AC46227225AD00853431 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E253AC45227225AD00853431 /* Assets.xcassets */; };
+		E253AC49227225AD00853431 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E253AC47227225AD00853431 /* LaunchScreen.storyboard */; };
+		E253AC54227225AD00853431 /* OasisTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC53227225AD00853431 /* OasisTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E253AC50227225AD00853431 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E253AC33227225AB00853431 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E253AC3A227225AB00853431;
+			remoteInfo = Oasis;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		E253AC3B227225AB00853431 /* Oasis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oasis.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E253AC3E227225AB00853431 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E253AC40227225AB00853431 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		E253AC43227225AB00853431 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E253AC45227225AD00853431 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E253AC48227225AD00853431 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E253AC4A227225AD00853431 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E253AC4F227225AD00853431 /* OasisTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OasisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E253AC53227225AD00853431 /* OasisTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OasisTests.swift; sourceTree = "<group>"; };
+		E253AC55227225AD00853431 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E253AC38227225AB00853431 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E253AC4C227225AD00853431 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E253AC32227225AB00853431 = {
+			isa = PBXGroup;
+			children = (
+				E253AC3D227225AB00853431 /* Oasis */,
+				E253AC52227225AD00853431 /* OasisTests */,
+				E253AC3C227225AB00853431 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E253AC3C227225AB00853431 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E253AC3B227225AB00853431 /* Oasis.app */,
+				E253AC4F227225AD00853431 /* OasisTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E253AC3D227225AB00853431 /* Oasis */ = {
+			isa = PBXGroup;
+			children = (
+				E253AC3E227225AB00853431 /* AppDelegate.swift */,
+				E253AC40227225AB00853431 /* ViewController.swift */,
+				E253AC42227225AB00853431 /* Main.storyboard */,
+				E253AC45227225AD00853431 /* Assets.xcassets */,
+				E253AC47227225AD00853431 /* LaunchScreen.storyboard */,
+				E253AC4A227225AD00853431 /* Info.plist */,
+			);
+			path = Oasis;
+			sourceTree = "<group>";
+		};
+		E253AC52227225AD00853431 /* OasisTests */ = {
+			isa = PBXGroup;
+			children = (
+				E253AC53227225AD00853431 /* OasisTests.swift */,
+				E253AC55227225AD00853431 /* Info.plist */,
+			);
+			path = OasisTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E253AC3A227225AB00853431 /* Oasis */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E253AC58227225AD00853431 /* Build configuration list for PBXNativeTarget "Oasis" */;
+			buildPhases = (
+				E253AC37227225AB00853431 /* Sources */,
+				E253AC38227225AB00853431 /* Frameworks */,
+				E253AC39227225AB00853431 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Oasis;
+			productName = Oasis;
+			productReference = E253AC3B227225AB00853431 /* Oasis.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E253AC4E227225AD00853431 /* OasisTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E253AC5B227225AD00853431 /* Build configuration list for PBXNativeTarget "OasisTests" */;
+			buildPhases = (
+				E253AC4B227225AD00853431 /* Sources */,
+				E253AC4C227225AD00853431 /* Frameworks */,
+				E253AC4D227225AD00853431 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E253AC51227225AD00853431 /* PBXTargetDependency */,
+			);
+			name = OasisTests;
+			productName = OasisTests;
+			productReference = E253AC4F227225AD00853431 /* OasisTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E253AC33227225AB00853431 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1010;
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = "Trevor Beasty";
+				TargetAttributes = {
+					E253AC3A227225AB00853431 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					E253AC4E227225AD00853431 = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = E253AC3A227225AB00853431;
+					};
+				};
+			};
+			buildConfigurationList = E253AC36227225AB00853431 /* Build configuration list for PBXProject "Oasis" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E253AC32227225AB00853431;
+			productRefGroup = E253AC3C227225AB00853431 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E253AC3A227225AB00853431 /* Oasis */,
+				E253AC4E227225AD00853431 /* OasisTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E253AC39227225AB00853431 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E253AC49227225AD00853431 /* LaunchScreen.storyboard in Resources */,
+				E253AC46227225AD00853431 /* Assets.xcassets in Resources */,
+				E253AC44227225AB00853431 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E253AC4D227225AD00853431 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E253AC37227225AB00853431 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E253AC41227225AB00853431 /* ViewController.swift in Sources */,
+				E253AC3F227225AB00853431 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E253AC4B227225AD00853431 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E253AC54227225AD00853431 /* OasisTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E253AC51227225AD00853431 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E253AC3A227225AB00853431 /* Oasis */;
+			targetProxy = E253AC50227225AD00853431 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		E253AC42227225AB00853431 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E253AC43227225AB00853431 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		E253AC47227225AD00853431 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E253AC48227225AD00853431 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E253AC56227225AD00853431 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E253AC57227225AD00853431 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E253AC59227225AD00853431 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Oasis/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = WW.Oasis;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E253AC5A227225AD00853431 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Oasis/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = WW.Oasis;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E253AC5C227225AD00853431 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = OasisTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = WW.OasisTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Oasis.app/Oasis";
+			};
+			name = Debug;
+		};
+		E253AC5D227225AD00853431 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = OasisTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = WW.OasisTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Oasis.app/Oasis";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E253AC36227225AB00853431 /* Build configuration list for PBXProject "Oasis" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E253AC56227225AD00853431 /* Debug */,
+				E253AC57227225AD00853431 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E253AC58227225AD00853431 /* Build configuration list for PBXNativeTarget "Oasis" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E253AC59227225AD00853431 /* Debug */,
+				E253AC5A227225AD00853431 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E253AC5B227225AD00853431 /* Build configuration list for PBXNativeTarget "OasisTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E253AC5C227225AD00853431 /* Debug */,
+				E253AC5D227225AD00853431 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E253AC33227225AB00853431 /* Project object */;
+}
