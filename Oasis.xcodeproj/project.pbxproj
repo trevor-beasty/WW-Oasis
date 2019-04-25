@@ -8,11 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		E253AC3F227225AB00853431 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC3E227225AB00853431 /* AppDelegate.swift */; };
-		E253AC41227225AB00853431 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC40227225AB00853431 /* ViewController.swift */; };
 		E253AC44227225AB00853431 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E253AC42227225AB00853431 /* Main.storyboard */; };
 		E253AC46227225AD00853431 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E253AC45227225AD00853431 /* Assets.xcassets */; };
 		E253AC49227225AD00853431 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E253AC47227225AD00853431 /* LaunchScreen.storyboard */; };
 		E253AC54227225AD00853431 /* OasisTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC53227225AD00853431 /* OasisTests.swift */; };
+		E253AC62227242F600853431 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC61227242F600853431 /* Store.swift */; };
+		E253AC642272434500853431 /* StateBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC632272434500853431 /* StateBinding.swift */; };
+		E253AC66227245BA00853431 /* Abstract.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC65227245BA00853431 /* Abstract.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,7 +30,6 @@
 /* Begin PBXFileReference section */
 		E253AC3B227225AB00853431 /* Oasis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oasis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E253AC3E227225AB00853431 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		E253AC40227225AB00853431 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E253AC43227225AB00853431 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E253AC45227225AD00853431 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E253AC48227225AD00853431 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -36,6 +37,9 @@
 		E253AC4F227225AD00853431 /* OasisTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OasisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E253AC53227225AD00853431 /* OasisTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OasisTests.swift; sourceTree = "<group>"; };
 		E253AC55227225AD00853431 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E253AC61227242F600853431 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		E253AC632272434500853431 /* StateBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBinding.swift; sourceTree = "<group>"; };
+		E253AC65227245BA00853431 /* Abstract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Abstract.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,8 +81,8 @@
 		E253AC3D227225AB00853431 /* Oasis */ = {
 			isa = PBXGroup;
 			children = (
+				E253AC60227242E800853431 /* Files */,
 				E253AC3E227225AB00853431 /* AppDelegate.swift */,
-				E253AC40227225AB00853431 /* ViewController.swift */,
 				E253AC42227225AB00853431 /* Main.storyboard */,
 				E253AC45227225AD00853431 /* Assets.xcassets */,
 				E253AC47227225AD00853431 /* LaunchScreen.storyboard */,
@@ -94,6 +98,16 @@
 				E253AC55227225AD00853431 /* Info.plist */,
 			);
 			path = OasisTests;
+			sourceTree = "<group>";
+		};
+		E253AC60227242E800853431 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				E253AC61227242F600853431 /* Store.swift */,
+				E253AC632272434500853431 /* StateBinding.swift */,
+				E253AC65227245BA00853431 /* Abstract.swift */,
+			);
+			path = Files;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -197,8 +211,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E253AC41227225AB00853431 /* ViewController.swift in Sources */,
 				E253AC3F227225AB00853431 /* AppDelegate.swift in Sources */,
+				E253AC66227245BA00853431 /* Abstract.swift in Sources */,
+				E253AC642272434500853431 /* StateBinding.swift in Sources */,
+				E253AC62227242F600853431 /* Store.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
