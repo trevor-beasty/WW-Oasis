@@ -13,3 +13,5 @@ internal let abstractMethodMessage = "abstract method must be overriden by subcl
 internal func emit(_ execute: @escaping () -> Void) {
     DispatchQueue.main.async(execute: execute)
 }
+
+public enum None { }

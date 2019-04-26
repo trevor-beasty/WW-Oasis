@@ -91,8 +91,10 @@ extension StateBindable where State == R {
         return { state in return state }
     }
     
-    public func update(with newValue: State) {
-        stateBinder.set(newValue: newValue)
+    public func update(_ mutate: (inout State) -> Void) {
+        var copy = stateBinder.value
+        mutate(&copy)
+        stateBinder.set(newValue: copy)
     }
 
 }
