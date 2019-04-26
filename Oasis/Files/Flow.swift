@@ -49,7 +49,7 @@ class UnitaryScreenFlow<Store: StoreProtocol>: ScreenFlow<Store.Output> {
 
 protocol ScreenContextType {
     associatedtype Containment: UIViewController
-    associatedtype ScreenPlacer: ScreenPlacerType where ScreenPlacer.ScreenContext == Self
+    associatedtype ScreenPlacer: ScreenPlacerType
 
     var container: Containment { get }
     func makePlacer() -> ScreenPlacer
@@ -62,26 +62,27 @@ protocol ScreenPlacerType {
     func place(_ viewController: UIViewController) -> ScreenContext
 }
 
-struct ScreenContextSwitcher<ScreenPlacer: ScreenPlacerType>: ScreenPlacerType {
-    typealias ScreenContext = ScreenPlacer.ScreenContext
+struct AnyScreenPlacer<ScreenContext: ScreenContextType>: ScreenPlacerType {
     
-    let switchContext: () -> Void
-    let screenPlacer: ScreenPlacer
+    private let _place: (UIViewController) -> ScreenContext
+    
+    init<ScreenPlacer: ScreenPlacerType>(_ screenPlacer: ScreenPlacer) where ScreenPlacer.ScreenContext == ScreenContext {
+        self._place = screenPlacer.place
+    }
+    
+    init(_ _place: @escaping (UIViewController) -> ScreenContext) {
+        self._place = _place
+    }
     
     func place(_ viewController: UIViewController) -> ScreenContext {
-        switchContext()
-        return screenPlacer.place(viewController)
+        return _place(viewController)
     }
     
 }
 
 protocol ModalContextType: ScreenContextType where Containment == UIViewController { }
 
-protocol ModalPlacerType: ScreenPlacerType where ScreenContext.Containment == UIViewController { }
-
 protocol NavigationContextType: ScreenContextType where Containment == UINavigationController { }
-
-protocol NavigationPlacerType: ScreenPlacerType where ScreenContext.Containment == UINavigationController { }
 
 struct ModalContext: ModalContextType {
     
@@ -93,7 +94,7 @@ struct ModalContext: ModalContextType {
     
 }
 
-struct ModalPlacer: ModalPlacerType {
+struct ModalPlacer: ScreenPlacerType {
     
     let presenting: UIViewController
     
@@ -114,7 +115,7 @@ struct NavigationContext: NavigationContextType {
     
 }
 
-struct NavigationPlacer: NavigationPlacerType {
+struct NavigationPlacer: ScreenPlacerType {
     
     let navigationController: UINavigationController
     
@@ -125,28 +126,61 @@ struct NavigationPlacer: NavigationPlacerType {
     
 }
 
-extension ScreenContextType {
+struct TabBarContext: ScreenContextType {
     
-    func makeModalPlacer() -> ModalPlacerType {
-        return ModalPlacer.init(presenting: container)
-    }
+    let index: Int
+    let container: UITabBarController
     
-    func makeNavigationPlacer() -> NavigationPlacerType {
-        return ScreenContextSwitcher<NavigationPlacer>.init(switchContext: <#T##() -> Void#>, screenPlacer: <#T##NavigationPlacer#>)
+    func makePlacer() -> TabBarPlacer {
+        return TabBarPlacer(tabBarController: container, index: index)
     }
     
 }
 
-//struct ScreenContext<Containment: UIViewController> {
-//
-//
-//
-//}
-//
-//struct ScreenPlacer<Containment: UIViewController> {
-//
-//    func place(_ toPlace: UIViewController) -> ScreenContext<Containment> {
-//
-//    }
-//
-//}
+struct TabBarPlacer: ScreenPlacerType {
+    
+    let tabBarController: UITabBarController
+    let index: Int
+    
+    func place(_ viewController: UIViewController) -> ModalContext {
+        tabBarController.viewControllers?[index] = viewController
+        return ModalContext.init(container: viewController)
+    }
+    
+}
+
+extension ScreenContextType {
+    
+    func makeModalPlacer() -> AnyScreenPlacer<ModalContext> {
+        return ModalPlacer.init(presenting: container).asAnyPlacer()
+    }
+    
+    func makeNavigationPlacer() -> AnyScreenPlacer<NavigationContext> {
+        return AnyScreenPlacer<NavigationContext>.init({ viewController in
+            let navigationController = UINavigationController(rootViewController: viewController)
+            self.container.present(navigationController, animated: true, completion: nil)
+            return NavigationContext.init(container: navigationController)
+        })
+    }
+    
+    func makeTabBarPlacer(with tabBarController: UITabBarController, for index: Int) -> AnyScreenPlacer<ModalContext> {
+        return TabBarPlacer.init(tabBarController: tabBarController, index: index).asAnyPlacer()
+    }
+    
+}
+
+extension ScreenContextType where Containment: UINavigationController {
+    
+    func makeNavigationPlacer() -> AnyScreenPlacer<NavigationContext> {
+        return NavigationPlacer.init(navigationController: container).asAnyPlacer()
+    }
+    
+}
+
+extension ScreenPlacerType {
+    
+    func asAnyPlacer() -> AnyScreenPlacer<ScreenContext> {
+        return AnyScreenPlacer<ScreenContext>.init(self)
+    }
+    
+}
