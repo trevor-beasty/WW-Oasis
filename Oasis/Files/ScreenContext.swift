@@ -24,7 +24,7 @@ struct ModalContext: RecursiveScreenContextType {
     let context: WeakBox<UIViewController>
     
     func makeNextPlacer() -> ScreenPlacer<ModalContext> {
-        return ModalPlacer(presenting: context).asPlacer()
+        return ModalPlacer(context).asPlacer()
     }
     
 }
@@ -34,7 +34,7 @@ struct NavigationContext: RecursiveScreenContextType {
     let context: WeakBox<UINavigationController>
     
     func makeNextPlacer() -> ScreenPlacer<NavigationContext> {
-        return NavigationPlacer(navigationController: context).asPlacer()
+        return NavigationPlacer(context).asPlacer()
     }
     
 }
@@ -44,7 +44,7 @@ struct TabBarContext: ScreenContextType {
     let context: WeakBox<UITabBarController>
     
     func makeNextPlacer() -> ScreenPlacer<ModalContext> {
-        return ModalPlacer(presenting: context.map({ $0 as UIViewController })).asPlacer()
+        return ModalPlacer(context.map({ $0 as UIViewController })).asPlacer()
     }
     
 }
@@ -56,7 +56,7 @@ struct PageContext: RecursiveScreenContextType {
     func makeNextPlacer() -> ScreenPlacer<PageContext> {
         return ScreenPlacer<PageContext>() { toPlace throws -> PageContext in
             guard let context = self.context.boxed else {
-                throw ScreenPlacerError<UIPageViewController>.nilBase(self.context)
+                throw ScreenPlacerBaseError<UIPageViewController>.nilBase(self.context)
             }
             context.setViewControllers([toPlace], direction: .forward, animated: true, completion: nil)
             return PageContext.init(context: self.context)
@@ -72,20 +72,18 @@ extension ScreenContextType {
     }
     
     func makeModalPlacer() -> ScreenPlacer<ModalContext> {
-        return ModalPlacer.init(presenting: context.map({ $0 as UIViewController })).asPlacer()
+        return ModalPlacer.init(context.map({ $0 as UIViewController })).asPlacer()
     }
     
     func makeNavigationEmbeddedModalPlacer(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
-        let modalPlacer = makeModalPlacer()
-        return RootNavigationPlacer(navigationController).makePlacer() { rootScreen in
-            _ = try? modalPlacer.place(rootScreen)
-        }
+        return makeModalPlacer()
+            .embedIn(navigationController)
     }
     
     func makeNavigationPlacer() -> ScreenPlacer<NavigationContext> {
         return ScreenPlacer<NavigationContext>.init({ viewController throws in
             guard let context = self.context.boxed else {
-                throw ScreenPlacerError<UIViewController>.nilBase(self.context.map({ $0 as UIViewController }))
+                throw ScreenPlacerBaseError<UIViewController>.nilBase(self.context.map({ $0 as UIViewController }))
             }
             let navigationController = UINavigationController(rootViewController: viewController)
             context.present(navigationController, animated: true, completion: nil)
@@ -98,7 +96,7 @@ extension ScreenContextType {
 extension ScreenContextType where Context: UINavigationController {
     
     func makeNavigationPlacer() -> ScreenPlacer<NavigationContext> {
-        return NavigationPlacer.init(navigationController: context.map({ $0 as UINavigationController })).asPlacer()
+        return NavigationPlacer.init(context.map({ $0 as UINavigationController })).asPlacer()
     }
     
 }
