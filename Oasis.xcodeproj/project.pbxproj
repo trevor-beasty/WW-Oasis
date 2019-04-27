@@ -22,6 +22,7 @@
 		E253AC742272534100853431 /* ScreenFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC732272534100853431 /* ScreenFlow.swift */; };
 		E253AC7A2274B46900853431 /* ScreenContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC792274B46900853431 /* ScreenContext.swift */; };
 		E253AC7C2274B4AE00853431 /* ScreenPlacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC7B2274B4AE00853431 /* ScreenPlacing.swift */; };
+		E253AC7F2274B5F200853431 /* ScreenFlowExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC7E2274B5F200853431 /* ScreenFlowExamples.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		E253AC732272534100853431 /* ScreenFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenFlow.swift; sourceTree = "<group>"; };
 		E253AC792274B46900853431 /* ScreenContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenContext.swift; sourceTree = "<group>"; };
 		E253AC7B2274B4AE00853431 /* ScreenPlacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenPlacing.swift; sourceTree = "<group>"; };
+		E253AC7E2274B5F200853431 /* ScreenFlowExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenFlowExamples.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 		E253AC3D227225AB00853431 /* Oasis */ = {
 			isa = PBXGroup;
 			children = (
+				E253AC7D2274B5DE00853431 /* Example */,
 				E253AC60227242E800853431 /* Files */,
 				E253AC3E227225AB00853431 /* AppDelegate.swift */,
 				E253AC42227225AB00853431 /* Main.storyboard */,
@@ -129,6 +132,14 @@
 				E253AC7B2274B4AE00853431 /* ScreenPlacing.swift */,
 			);
 			path = Files;
+			sourceTree = "<group>";
+		};
+		E253AC7D2274B5DE00853431 /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				E253AC7E2274B5F200853431 /* ScreenFlowExamples.swift */,
+			);
+			path = Example;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -238,6 +249,7 @@
 				E253AC66227245BA00853431 /* Abstract.swift in Sources */,
 				E253AC642272434500853431 /* StateBinding.swift in Sources */,
 				E253AC742272534100853431 /* ScreenFlow.swift in Sources */,
+				E253AC7F2274B5F200853431 /* ScreenFlowExamples.swift in Sources */,
 				E253AC6C227247FF00853431 /* Module.swift in Sources */,
 				E253AC6A227247B900853431 /* AnyStore.swift in Sources */,
 				E253AC62227242F600853431 /* Store.swift in Sources */,
