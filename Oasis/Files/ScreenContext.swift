@@ -49,18 +49,18 @@ struct TabBarContext: ScreenContextType {
     
 }
 
-//struct WindowContext: ScreenContextType {
-//
-//    let context: UIWindow
-//
-//    func makeNextPlacer() -> ScreenPlacer<ModalContext> {
-//        return ScreenPlacer<ModalContext>() { toPlace in
-//            self.context.rootViewController = toPlace
-//            return ModalContext.init(context: toPlace)
-//        }
-//    }
-//
-//}
+struct PageContext: RecursiveScreenContextType {
+    
+    let context: UIPageViewController
+    
+    func makeNextPlacer() -> ScreenPlacer<PageContext> {
+        return ScreenPlacer<PageContext>() { toPlace -> PageContext in
+            self.context.setViewControllers([toPlace], direction: .forward, animated: true, completion: nil)
+            return PageContext.init(context: self.context)
+        }
+    }
+    
+}
 
 extension ScreenContextType {
     
@@ -72,7 +72,7 @@ extension ScreenContextType {
         return ModalPlacer.init(presenting: context).asPlacer()
     }
     
-    func makeNavEmbeddedModalPlacer(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
+    func makeNavigationEmbeddedModalPlacer(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
         let modalPlacer = makeModalPlacer()
         return RootNavigationPlacer(navigationController).makePlacer() { rootScreen in
             _ = modalPlacer.place(rootScreen)

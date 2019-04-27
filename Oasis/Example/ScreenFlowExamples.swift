@@ -33,7 +33,7 @@ class FoodOnboardingFlow: ScreenFlow<OnboardingAOutput, NavigationContext> {
             color = .purple
             text = "We have magical powers that make some foods zero calories!"
         case 2:
-            color = .green
+            color = .darkGray
             text = "So... you're in! Let's go eat some grapes!"
         default:
             fatalError()
@@ -99,6 +99,7 @@ class TextController: UIViewController, ObjectBindable {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.lineBreakMode = .byWordWrapping
+        label.isUserInteractionEnabled = true
         self.view = label
     }
     
