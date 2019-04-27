@@ -51,13 +51,17 @@ struct TabBarContext: ScreenContextType {
 
 extension ScreenContextType {
     
+    func asModalContext() -> ModalContext {
+        return ModalContext.init(context: context)
+    }
+    
     func makeModalPlacer() -> AnyScreenPlacer<ModalContext> {
         return ModalPlacer.init(presenting: context).asAnyPlacer()
     }
     
-    func makeNavEmbeddedModalPlacer<RootScreen: RootScreenType>(_ rootScreenType: RootScreen.Type) -> AnyScreenPlacer<NavigationContext> where RootScreen: UINavigationController {
+    func makeNavEmbeddedModalPlacer(_ navigationController: UINavigationController) -> AnyScreenPlacer<NavigationContext> {
         let modalPlacer = makeModalPlacer()
-        return RootNavigationPlacer<RootScreen>().makePlacer() { rootScreen in
+        return RootNavigationPlacer(navigationController).makePlacer() { rootScreen in
             _ = modalPlacer.place(rootScreen)
         }
     }
@@ -68,13 +72,6 @@ extension ScreenContextType {
             self.context.present(navigationController, animated: true, completion: nil)
             return NavigationContext.init(context: navigationController)
         })
-    }
-    
-    func makeTabBarPlacer<RootScreen: RootScreenType>(_ rootScreenType: RootScreen.Type, _ tabCount: Int) -> [AnyScreenPlacer<TabBarContext>] where RootScreen: UITabBarController {
-        let modalPlacer = makeModalPlacer()
-        return RootTabBarPlacer<RootScreen>().makePlacers(tabCount) { rootScreen in
-            _ = modalPlacer.place(rootScreen)
-        }
     }
     
 }

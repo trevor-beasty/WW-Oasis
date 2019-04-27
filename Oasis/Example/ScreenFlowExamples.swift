@@ -13,7 +13,7 @@ enum OnboardingAOutput {
     case didFinish
 }
 
-class OnboardingA: ScreenFlow<OnboardingAOutput, NavigationContext> {
+class FoodOnboardingFlow: ScreenFlow<OnboardingAOutput, NavigationContext> {
     
     private weak var navigationController: UINavigationController?
     
@@ -55,6 +55,16 @@ class OnboardingA: ScreenFlow<OnboardingAOutput, NavigationContext> {
         }
         
         return controller
+    }
+    
+}
+
+class MyDayFlow<ScreenContext: ScreenContextType>: ScreenFlow<None, ScreenContext> {
+    
+    private weak var tabBarController: UITabBarController?
+    
+    override func start(_ screenPlacer: AnyScreenPlacer<ScreenContext>) {
+        screenPlacer.embedInTabBarController(<#T##rootScreenType: RootScreenType.Protocol##RootScreenType.Protocol#>, <#T##tabCount: Int##Int#>)
     }
     
 }

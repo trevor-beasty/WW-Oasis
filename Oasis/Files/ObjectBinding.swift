@@ -71,16 +71,6 @@ public final class ObjectBinder {
     
 }
 
-internal final class WeakBox<T: AnyObject> {
-    
-    weak var boxed: T?
-    
-    init(_ boxed: T) {
-        self.boxed = boxed
-    }
-    
-}
-
 extension ObjectBindable {
     
     public func bind(_ toBound: AnyObject) {

@@ -38,16 +38,12 @@ struct NavigationPlacer: ScreenPlacerType {
     
 }
 
-protocol RootScreenType where Self: UIViewController {
-    static func createEmptyRoot() -> Self
-}
-
-struct RootNavigationPlacer<RootScreen: RootScreenType> where RootScreen: UINavigationController {
+struct RootNavigationPlacer {
     
     private let navigationController: UINavigationController
     
-    init() {
-        self.navigationController = RootScreen.createEmptyRoot()
+    init(_ navigationController: UINavigationController) {
+        self.navigationController = navigationController
     }
     
     func makePlacer(placeNavigationController: @escaping (UINavigationController) -> Void) -> AnyScreenPlacer<NavigationContext> {
@@ -60,12 +56,12 @@ struct RootNavigationPlacer<RootScreen: RootScreenType> where RootScreen: UINavi
     
 }
 
-struct RootTabBarPlacer<RootScreen: RootScreenType> where RootScreen: UITabBarController {
+struct RootTabBarPlacer {
     
     private let tabBarController: UITabBarController
     
-    init() {
-        self.tabBarController = RootScreen.createEmptyRoot()
+    init(_ tabBarController: UITabBarController) {
+        self.tabBarController = tabBarController
     }
     
     func makePlacers(_ tabCount: Int, placeTabBar: @escaping (UITabBarController) -> Void) -> [AnyScreenPlacer<TabBarContext>] {
@@ -112,6 +108,18 @@ extension ScreenPlacerType {
     
     func asAnyPlacer() -> AnyScreenPlacer<NextScreenContext> {
         return AnyScreenPlacer<NextScreenContext>.init(self)
+    }
+    
+    func embedIn(_ tabBarController: UITabBarController, tabCount: Int) -> [AnyScreenPlacer<TabBarContext>] {
+        return RootTabBarPlacer(tabBarController).makePlacers(tabCount) { tabBarController in
+            _ = self.place(tabBarController)
+        }
+    }
+    
+    func embedIn(_ navigationController: UINavigationController) -> AnyScreenPlacer<NavigationContext> {
+        return RootNavigationPlacer(navigationController).makePlacer() { tabBarController in
+            _ = self.place(tabBarController)
+        }
     }
     
 }
