@@ -38,6 +38,17 @@ struct NavigationPlacer: ScreenPlacerType {
     
 }
 
+struct WindowPlacer: ScreenPlacerType {
+    
+    let window: UIWindow
+    
+    func place(_ viewController: UIViewController) -> ModalContext {
+        window.rootViewController = viewController
+        return ModalContext(context: viewController)
+    }
+    
+}
+
 struct RootNavigationPlacer {
     
     private let navigationController: UINavigationController
@@ -46,8 +57,8 @@ struct RootNavigationPlacer {
         self.navigationController = navigationController
     }
     
-    func makePlacer(placeNavigationController: @escaping (UINavigationController) -> Void) -> AnyScreenPlacer<NavigationContext> {
-        return AnyScreenPlacer<NavigationContext>() { toPlace -> NavigationContext in
+    func makePlacer(placeNavigationController: @escaping (UINavigationController) -> Void) -> ScreenPlacer<NavigationContext> {
+        return ScreenPlacer<NavigationContext>() { toPlace -> NavigationContext in
             self.navigationController.viewControllers = [toPlace]
             placeNavigationController(self.navigationController)
             return NavigationContext.init(context: self.navigationController)
@@ -56,7 +67,7 @@ struct RootNavigationPlacer {
     
 }
 
-struct RootTabBarPlacer {
+struct TabBarPlacer {
     
     private let tabBarController: UITabBarController
     
@@ -64,7 +75,7 @@ struct RootTabBarPlacer {
         self.tabBarController = tabBarController
     }
     
-    func makePlacers(_ tabCount: Int, placeTabBar: @escaping (UITabBarController) -> Void) -> [AnyScreenPlacer<TabBarContext>] {
+    func makePlacers(_ tabCount: Int, placeTabBar: @escaping (UITabBarController) -> Void) -> [ScreenPlacer<TabBarContext>] {
         
         var placingBuffer: [UIViewController?] = Array<UIViewController?>.init(repeating: nil, count: tabCount) {
             didSet {
@@ -75,8 +86,8 @@ struct RootTabBarPlacer {
             }
         }
         
-        return (0..<tabCount).map({ index -> AnyScreenPlacer<TabBarContext> in
-            return AnyScreenPlacer<TabBarContext>() { toPlace in
+        return (0..<tabCount).map({ index -> ScreenPlacer<TabBarContext> in
+            return ScreenPlacer<TabBarContext>() { toPlace in
                 placingBuffer[index] = toPlace
                 return TabBarContext.init(context: self.tabBarController)
             }
@@ -86,7 +97,7 @@ struct RootTabBarPlacer {
     
 }
 
-struct AnyScreenPlacer<NextScreenContext: ScreenContextType>: ScreenPlacerType {
+struct ScreenPlacer<NextScreenContext: ScreenContextType>: ScreenPlacerType {
     
     private let _place: (UIViewController) -> NextScreenContext
     
@@ -106,17 +117,17 @@ struct AnyScreenPlacer<NextScreenContext: ScreenContextType>: ScreenPlacerType {
 
 extension ScreenPlacerType {
     
-    func asAnyPlacer() -> AnyScreenPlacer<NextScreenContext> {
-        return AnyScreenPlacer<NextScreenContext>.init(self)
+    func asPlacer() -> ScreenPlacer<NextScreenContext> {
+        return ScreenPlacer<NextScreenContext>.init(self)
     }
     
-    func embedIn(_ tabBarController: UITabBarController, tabCount: Int) -> [AnyScreenPlacer<TabBarContext>] {
-        return RootTabBarPlacer(tabBarController).makePlacers(tabCount) { tabBarController in
+    func embedIn(_ tabBarController: UITabBarController, tabCount: Int) -> [ScreenPlacer<TabBarContext>] {
+        return TabBarPlacer(tabBarController).makePlacers(tabCount) { tabBarController in
             _ = self.place(tabBarController)
         }
     }
     
-    func embedIn(_ navigationController: UINavigationController) -> AnyScreenPlacer<NavigationContext> {
+    func embedIn(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
         return RootNavigationPlacer(navigationController).makePlacer() { tabBarController in
             _ = self.place(tabBarController)
         }

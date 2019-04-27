@@ -14,7 +14,7 @@ protocol ScreenContextType {
     associatedtype RecursiveContext: RecursiveScreenContextType
     
     var context: Context { get }
-    func makeNextPlacer() -> AnyScreenPlacer<RecursiveContext>
+    func makeNextPlacer() -> ScreenPlacer<RecursiveContext>
 }
 
 protocol RecursiveScreenContextType: ScreenContextType where RecursiveContext == Self { }
@@ -23,8 +23,8 @@ struct ModalContext: RecursiveScreenContextType {
     
     let context: UIViewController
     
-    func makeNextPlacer() -> AnyScreenPlacer<ModalContext> {
-        return ModalPlacer(presenting: context).asAnyPlacer()
+    func makeNextPlacer() -> ScreenPlacer<ModalContext> {
+        return ModalPlacer(presenting: context).asPlacer()
     }
     
 }
@@ -33,8 +33,8 @@ struct NavigationContext: RecursiveScreenContextType {
     
     let context: UINavigationController
     
-    func makeNextPlacer() -> AnyScreenPlacer<NavigationContext> {
-        return NavigationPlacer(navigationController: context).asAnyPlacer()
+    func makeNextPlacer() -> ScreenPlacer<NavigationContext> {
+        return NavigationPlacer(navigationController: context).asPlacer()
     }
     
 }
@@ -43,11 +43,24 @@ struct TabBarContext: ScreenContextType {
     
     let context: UITabBarController
     
-    func makeNextPlacer() -> AnyScreenPlacer<ModalContext> {
-        return ModalPlacer(presenting: context).asAnyPlacer()
+    func makeNextPlacer() -> ScreenPlacer<ModalContext> {
+        return ModalPlacer(presenting: context).asPlacer()
     }
     
 }
+
+//struct WindowContext: ScreenContextType {
+//
+//    let context: UIWindow
+//
+//    func makeNextPlacer() -> ScreenPlacer<ModalContext> {
+//        return ScreenPlacer<ModalContext>() { toPlace in
+//            self.context.rootViewController = toPlace
+//            return ModalContext.init(context: toPlace)
+//        }
+//    }
+//
+//}
 
 extension ScreenContextType {
     
@@ -55,19 +68,19 @@ extension ScreenContextType {
         return ModalContext.init(context: context)
     }
     
-    func makeModalPlacer() -> AnyScreenPlacer<ModalContext> {
-        return ModalPlacer.init(presenting: context).asAnyPlacer()
+    func makeModalPlacer() -> ScreenPlacer<ModalContext> {
+        return ModalPlacer.init(presenting: context).asPlacer()
     }
     
-    func makeNavEmbeddedModalPlacer(_ navigationController: UINavigationController) -> AnyScreenPlacer<NavigationContext> {
+    func makeNavEmbeddedModalPlacer(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
         let modalPlacer = makeModalPlacer()
         return RootNavigationPlacer(navigationController).makePlacer() { rootScreen in
             _ = modalPlacer.place(rootScreen)
         }
     }
     
-    func makeNavigationPlacer() -> AnyScreenPlacer<NavigationContext> {
-        return AnyScreenPlacer<NavigationContext>.init({ viewController in
+    func makeNavigationPlacer() -> ScreenPlacer<NavigationContext> {
+        return ScreenPlacer<NavigationContext>.init({ viewController in
             let navigationController = UINavigationController(rootViewController: viewController)
             self.context.present(navigationController, animated: true, completion: nil)
             return NavigationContext.init(context: navigationController)
@@ -78,8 +91,8 @@ extension ScreenContextType {
 
 extension ScreenContextType where Context: UINavigationController {
     
-    func makeNavigationPlacer() -> AnyScreenPlacer<NavigationContext> {
-        return NavigationPlacer.init(navigationController: context).asAnyPlacer()
+    func makeNavigationPlacer() -> ScreenPlacer<NavigationContext> {
+        return NavigationPlacer.init(navigationController: context).asPlacer()
     }
     
 }

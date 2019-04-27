@@ -11,7 +11,7 @@ import UIKit
 
 class ScreenFlow<Output, ScreenContext: ScreenContextType>: Module<None, Output> {
     
-    open func start(_ screenPlacer: AnyScreenPlacer<ScreenContext>) {
+    open func start(_ screenPlacer: ScreenPlacer<ScreenContext>) {
         fatalError(abstractMethodMessage)
     }
 
