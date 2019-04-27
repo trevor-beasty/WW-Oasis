@@ -122,4 +122,8 @@ enum ScreenPlacement {
         }).asPlacer()
     }
     
+    public static func make<Base: AnyObject, NextScreenContext: ScreenContextType>(_ base: WeakBox<Base>, place: @escaping (Base, UIViewController) -> NextScreenContext) -> ScreenPlacer<NextScreenContext> {
+        return ScreenPlacerSink<Base, NextScreenContext>.init(.weak(base), place: place).asPlacer()
+    }
+    
 }
