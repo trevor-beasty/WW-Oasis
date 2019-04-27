@@ -9,42 +9,55 @@
 import Foundation
 import UIKit
 
+enum ScreenPlacerError<Base: AnyObject>: Error {
+    case nilBase(WeakBox<Base>)
+}
+
 protocol ScreenPlacerType {
     associatedtype NextScreenContext: ScreenContextType
     
-    func place(_ viewController: UIViewController) -> NextScreenContext
+    func place(_ viewController: UIViewController) throws -> NextScreenContext
 }
 
 
 struct ModalPlacer: ScreenPlacerType {
     
-    let presenting: UIViewController
+    let presenting: WeakBox<UIViewController>
     
-    func place(_ viewController: UIViewController) -> ModalContext {
+    func place(_ viewController: UIViewController) throws -> ModalContext {
+        guard let presenting = presenting.boxed else {
+            throw ScreenPlacerError<UIViewController>.nilBase(self.presenting)
+        }
         presenting.present(viewController, animated: true, completion: nil)
-        return ModalContext.init(context: viewController)
+        return ModalContext.init(context: WeakBox<UIViewController>(viewController))
     }
     
 }
 
 struct NavigationPlacer: ScreenPlacerType {
     
-    let navigationController: UINavigationController
+    let navigationController: WeakBox<UINavigationController>
     
-    func place(_ viewController: UIViewController) -> NavigationContext {
+    func place(_ viewController: UIViewController) throws -> NavigationContext {
+        guard let navigationController = navigationController.boxed else {
+            throw ScreenPlacerError<UINavigationController>.nilBase(self.navigationController)
+        }
         navigationController.pushViewController(viewController, animated: true)
-        return NavigationContext.init(context: navigationController)
+        return NavigationContext.init(context: self.navigationController)
     }
     
 }
 
 struct WindowPlacer: ScreenPlacerType {
     
-    let window: UIWindow
+    let window: WeakBox<UIWindow>
     
-    func place(_ viewController: UIViewController) -> ModalContext {
+    func place(_ viewController: UIViewController) throws -> ModalContext {
+        guard let window = window.boxed else {
+            throw ScreenPlacerError<UIWindow>.nilBase(self.window)
+        }
         window.rootViewController = viewController
-        return ModalContext(context: viewController)
+        return ModalContext(context: WeakBox<UIViewController>(viewController))
     }
     
 }
@@ -61,13 +74,13 @@ struct RootNavigationPlacer {
         return ScreenPlacer<NavigationContext>() { toPlace -> NavigationContext in
             self.navigationController.viewControllers = [toPlace]
             placeNavigationController(self.navigationController)
-            return NavigationContext.init(context: self.navigationController)
+            return NavigationContext.init(context: WeakBox<UINavigationController>(self.navigationController))
         }
     }
     
 }
 
-struct TabBarPlacer {
+struct RootTabBarPlacer {
     
     private let tabBarController: UITabBarController
     
@@ -89,7 +102,7 @@ struct TabBarPlacer {
         return (0..<tabCount).map({ index -> ScreenPlacer<TabBarContext> in
             return ScreenPlacer<TabBarContext>() { toPlace in
                 placingBuffer[index] = toPlace
-                return TabBarContext.init(context: self.tabBarController)
+                return TabBarContext.init(context: WeakBox<UITabBarController>(self.tabBarController))
             }
         })
         
@@ -99,18 +112,18 @@ struct TabBarPlacer {
 
 struct ScreenPlacer<NextScreenContext: ScreenContextType>: ScreenPlacerType {
     
-    private let _place: (UIViewController) -> NextScreenContext
+    private let _place: (UIViewController) throws -> NextScreenContext
     
     init<ScreenPlacer: ScreenPlacerType>(_ screenPlacer: ScreenPlacer) where ScreenPlacer.NextScreenContext == NextScreenContext {
         self._place = screenPlacer.place
     }
     
-    init(_ _place: @escaping (UIViewController) -> NextScreenContext) {
+    init(_ _place: @escaping (UIViewController) throws -> NextScreenContext) {
         self._place = _place
     }
     
-    func place(_ viewController: UIViewController) -> NextScreenContext {
-        return _place(viewController)
+    func place(_ viewController: UIViewController) throws -> NextScreenContext {
+        return try _place(viewController)
     }
     
 }
@@ -121,15 +134,25 @@ extension ScreenPlacerType {
         return ScreenPlacer<NextScreenContext>.init(self)
     }
     
-    func embedIn(_ tabBarController: UITabBarController, tabCount: Int) -> [ScreenPlacer<TabBarContext>] {
-        return TabBarPlacer(tabBarController).makePlacers(tabCount) { tabBarController in
-            _ = self.place(tabBarController)
+    func embedIn(_ tabBarController: UITabBarController, tabCount: Int, onError: @escaping (Error) -> Void = { _ in return }) -> [ScreenPlacer<TabBarContext>] {
+        return RootTabBarPlacer(tabBarController).makePlacers(tabCount) { tabBarController in
+            do {
+                _ = try self.place(tabBarController)
+            }
+            catch let error {
+                onError(error)
+            }
         }
     }
     
-    func embedIn(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
-        return RootNavigationPlacer(navigationController).makePlacer() { tabBarController in
-            _ = self.place(tabBarController)
+    func embedIn(_ navigationController: UINavigationController, onError: @escaping (Error) -> Void = { _ in return }) -> ScreenPlacer<NavigationContext> {
+        return RootNavigationPlacer(navigationController).makePlacer() { navigationController in
+            do {
+                _ = try self.place(navigationController)
+            }
+            catch let error {
+                onError(error)
+            }
         }
     }
     
