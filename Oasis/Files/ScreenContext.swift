@@ -54,22 +54,15 @@ struct PageContext: RecursiveScreenContextType {
     let context: WeakBox<UIPageViewController>
     
     func makeNextPlacer() -> ScreenPlacer<PageContext> {
-        return ScreenPlacer<PageContext>() { toPlace throws -> PageContext in
-            guard let context = self.context.boxed else {
-                throw ScreenPlacerBaseError<UIPageViewController>.nilBase(self.context)
-            }
-            context.setViewControllers([toPlace], direction: .forward, animated: true, completion: nil)
-            return PageContext.init(context: self.context)
-        }
+        return ScreenPlacerSink<UIPageViewController, PageContext>(.weak(context)) { base, toPlace in
+            base.setViewControllers([toPlace], direction: .forward, animated: true, completion: nil)
+            return PageContext.init(context: WeakBox(base))
+        }.asPlacer()
     }
     
 }
 
 extension ScreenContextType {
-    
-    func asModalContext() -> ModalContext {
-        return ModalContext.init(context: context.map({ $0 as UIViewController }))
-    }
     
     func makeModalPlacer() -> ScreenPlacer<ModalContext> {
         return ModalPlacer.init(context.map({ $0 as UIViewController })).asPlacer()
@@ -78,25 +71,6 @@ extension ScreenContextType {
     func makeNavigationEmbeddedModalPlacer(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
         return makeModalPlacer()
             .embedIn(navigationController)
-    }
-    
-    func makeNavigationPlacer() -> ScreenPlacer<NavigationContext> {
-        return ScreenPlacer<NavigationContext>.init({ viewController throws in
-            guard let context = self.context.boxed else {
-                throw ScreenPlacerBaseError<UIViewController>.nilBase(self.context.map({ $0 as UIViewController }))
-            }
-            let navigationController = UINavigationController(rootViewController: viewController)
-            context.present(navigationController, animated: true, completion: nil)
-            return NavigationContext.init(context: WeakBox<UINavigationController>(navigationController))
-        })
-    }
-    
-}
-
-extension ScreenContextType where Context: UINavigationController {
-    
-    func makeNavigationPlacer() -> ScreenPlacer<NavigationContext> {
-        return NavigationPlacer.init(context.map({ $0 as UINavigationController })).asPlacer()
     }
     
 }

@@ -36,3 +36,8 @@ extension WeakBox {
     }
     
 }
+
+internal enum WeakStrong<T: AnyObject> {
+    case strong(T)
+    case weak(WeakBox<T>)
+}

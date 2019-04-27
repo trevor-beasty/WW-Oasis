@@ -26,11 +26,11 @@ protocol ScreenPlacerType {
 class ScreenPlacerSink<Base: AnyObject, NextScreenContext: ScreenContextType>: ScreenPlacerType {
     typealias Place = (Base, UIViewController) throws -> NextScreenContext
     
-    private let base: WeakBox<Base>
+    private let base: WeakStrong<Base>
     private let place: Place
     private var didPlace = false
     
-    init(_ base: WeakBox<Base>, place: @escaping Place) {
+    init(_ base: WeakStrong<Base>, place: @escaping Place) {
         self.base = base
         self.place = place
     }
@@ -39,8 +39,15 @@ class ScreenPlacerSink<Base: AnyObject, NextScreenContext: ScreenContextType>: S
         guard !didPlace else {
             throw ScreenPlacerError.placementExhausted
         }
-        guard let base = base.boxed else {
-            throw ScreenPlacerBaseError<Base>.nilBase(self.base)
+        let base: Base
+        switch self.base {
+        case .strong(let _base):
+            base = _base
+        case .weak(let weakBox):
+            guard let _base = weakBox.boxed else {
+                throw ScreenPlacerBaseError<Base>.nilBase(weakBox)
+            }
+            base = _base
         }
         let nextScreenContext = try place(base, viewController)
         didPlace = true
@@ -52,7 +59,7 @@ class ScreenPlacerSink<Base: AnyObject, NextScreenContext: ScreenContextType>: S
 class ModalPlacer: ScreenPlacerSink<UIViewController, ModalContext> {
     
     init(_ presenting: WeakBox<UIViewController>) {
-        super.init(presenting) { (base, toPlace) -> ModalContext in
+        super.init(.weak(presenting)) { (base, toPlace) -> ModalContext in
             base.present(toPlace, animated: true, completion: nil)
             return ModalContext.init(context: WeakBox<UIViewController>(toPlace))
         }
@@ -63,7 +70,7 @@ class ModalPlacer: ScreenPlacerSink<UIViewController, ModalContext> {
 class NavigationPlacer: ScreenPlacerSink<UINavigationController, NavigationContext> {
     
     init(_ navigationController: WeakBox<UINavigationController>) {
-        super.init(navigationController) { (base, toPlace) -> NavigationContext in
+        super.init(.weak(navigationController)) { (base, toPlace) -> NavigationContext in
             base.pushViewController(toPlace, animated: true)
             return NavigationContext.init(context: WeakBox<UINavigationController>(base))
         }
@@ -74,7 +81,7 @@ class NavigationPlacer: ScreenPlacerSink<UINavigationController, NavigationConte
 class WindowPlacer: ScreenPlacerSink<UIWindow, ModalContext> {
     
     init(_ window: WeakBox<UIWindow>) {
-        super.init(window) { (base, toPlace) -> ModalContext in
+        super.init(.weak(window)) { (base, toPlace) -> ModalContext in
             base.rootViewController = toPlace
             return ModalContext(context: WeakBox<UIViewController>(toPlace))
         }
@@ -88,10 +95,6 @@ struct ScreenPlacer<NextScreenContext: ScreenContextType>: ScreenPlacerType {
     
     init<ScreenPlacer: ScreenPlacerType>(_ screenPlacer: ScreenPlacer) where ScreenPlacer.NextScreenContext == NextScreenContext {
         self._place = screenPlacer.place
-    }
-    
-    init(_ _place: @escaping (UIViewController) throws -> NextScreenContext) {
-        self._place = _place
     }
     
     func place(_ viewController: UIViewController) throws -> NextScreenContext {
@@ -118,20 +121,20 @@ extension ScreenPlacerType {
         }
         
         return (0..<tabCount).map({ index -> ScreenPlacer<TabBarContext> in
-            return ScreenPlacer<TabBarContext>() { toPlace in
+            return ScreenPlacerSink<UITabBarController, TabBarContext>(.strong(tabBarController)) { base, toPlace in
                 placingBuffer[index] = toPlace
-                return TabBarContext.init(context: WeakBox<UITabBarController>(tabBarController))
-            }
+                return TabBarContext.init(context: WeakBox<UITabBarController>(base))
+            }.asPlacer()
         })
 
     }
     
     func embedIn(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
-        return ScreenPlacer<NavigationContext>() { toPlace -> NavigationContext in
-            navigationController.viewControllers = [toPlace]
-            _ = try? self.place(navigationController)
-            return NavigationContext.init(context: WeakBox<UINavigationController>(navigationController))
-        }
+        return ScreenPlacerSink<UINavigationController, NavigationContext>(.strong(navigationController)) { base, toPlace in
+            base.viewControllers = [toPlace]
+            _ = try? self.place(base)
+            return NavigationContext.init(context: WeakBox<UINavigationController>(base))
+        }.asPlacer()
     }
     
 }
