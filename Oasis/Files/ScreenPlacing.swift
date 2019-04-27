@@ -134,25 +134,15 @@ extension ScreenPlacerType {
         return ScreenPlacer<NextScreenContext>.init(self)
     }
     
-    func embedIn(_ tabBarController: UITabBarController, tabCount: Int, onError: @escaping (Error) -> Void = { _ in return }) -> [ScreenPlacer<TabBarContext>] {
+    func embedIn(_ tabBarController: UITabBarController, tabCount: Int) -> [ScreenPlacer<TabBarContext>] {
         return RootTabBarPlacer(tabBarController).makePlacers(tabCount) { tabBarController in
-            do {
-                _ = try self.place(tabBarController)
-            }
-            catch let error {
-                onError(error)
-            }
+            _ = try? self.place(tabBarController)
         }
     }
     
-    func embedIn(_ navigationController: UINavigationController, onError: @escaping (Error) -> Void = { _ in return }) -> ScreenPlacer<NavigationContext> {
+    func embedIn(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
         return RootNavigationPlacer(navigationController).makePlacer() { navigationController in
-            do {
-                _ = try self.place(navigationController)
-            }
-            catch let error {
-                onError(error)
-            }
+            _ = try? self.place(navigationController)
         }
     }
     
