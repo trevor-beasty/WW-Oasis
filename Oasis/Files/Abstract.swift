@@ -16,7 +16,7 @@ internal func emit(_ execute: @escaping () -> Void) {
 
 public enum None { }
 
-internal final class WeakBox<T: AnyObject> {
+public final class WeakBox<T: AnyObject> {
     
     weak var boxed: T?
     
