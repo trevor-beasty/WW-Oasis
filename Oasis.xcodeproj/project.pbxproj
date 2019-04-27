@@ -19,9 +19,7 @@
 		E253AC6A227247B900853431 /* AnyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC69227247B900853431 /* AnyStore.swift */; };
 		E253AC6C227247FF00853431 /* Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC6B227247FF00853431 /* Module.swift */; };
 		E253AC6E2272493A00853431 /* ObjectBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC6D2272493A00853431 /* ObjectBinding.swift */; };
-		E253AC722272509A00853431 /* FlowContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC712272509A00853431 /* FlowContext.swift */; };
 		E253AC742272534100853431 /* Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC732272534100853431 /* Flow.swift */; };
-		E253AC7822748F4D00853431 /* ScreenPlacer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E253AC7722748F4D00853431 /* ScreenPlacer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,9 +49,7 @@
 		E253AC69227247B900853431 /* AnyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyStore.swift; sourceTree = "<group>"; };
 		E253AC6B227247FF00853431 /* Module.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Module.swift; sourceTree = "<group>"; };
 		E253AC6D2272493A00853431 /* ObjectBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectBinding.swift; sourceTree = "<group>"; };
-		E253AC712272509A00853431 /* FlowContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowContext.swift; sourceTree = "<group>"; };
 		E253AC732272534100853431 /* Flow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flow.swift; sourceTree = "<group>"; };
-		E253AC7722748F4D00853431 /* ScreenPlacer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenPlacer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,9 +120,7 @@
 				E253AC69227247B900853431 /* AnyStore.swift */,
 				E253AC6B227247FF00853431 /* Module.swift */,
 				E253AC6D2272493A00853431 /* ObjectBinding.swift */,
-				E253AC712272509A00853431 /* FlowContext.swift */,
 				E253AC732272534100853431 /* Flow.swift */,
-				E253AC7722748F4D00853431 /* ScreenPlacer.swift */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -232,9 +226,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E253AC7822748F4D00853431 /* ScreenPlacer.swift in Sources */,
 				E253AC6E2272493A00853431 /* ObjectBinding.swift in Sources */,
-				E253AC722272509A00853431 /* FlowContext.swift in Sources */,
 				E253AC682272479C00853431 /* StoreAdapter.swift in Sources */,
 				E253AC3F227225AB00853431 /* AppDelegate.swift in Sources */,
 				E253AC66227245BA00853431 /* Abstract.swift in Sources */,

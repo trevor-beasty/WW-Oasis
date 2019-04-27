@@ -19,11 +19,13 @@ class UnitaryScreenFlow<Store: StoreProtocol>: ScreenFlow<Store.Output> {
 
 protocol ScreenContextType {
     associatedtype Context: UIViewController
-    associatedtype RecursiveContext: ScreenContextType
+    associatedtype RecursiveContext: RecursiveScreenContextType
 
     var context: Context { get }
     func makeNextPlacer() -> AnyScreenPlacer<RecursiveContext>
 }
+
+protocol RecursiveScreenContextType: ScreenContextType where RecursiveContext == Self { }
 
 protocol ScreenPlacerType {
     associatedtype NextScreenContext: ScreenContextType
@@ -31,7 +33,7 @@ protocol ScreenPlacerType {
     func place(_ viewController: UIViewController) -> NextScreenContext
 }
 
-struct ModalContext: ScreenContextType {
+struct ModalContext: RecursiveScreenContextType {
     
     let context: UIViewController
     
@@ -41,12 +43,22 @@ struct ModalContext: ScreenContextType {
     
 }
 
-struct NavigationContext: ScreenContextType {
+struct NavigationContext: RecursiveScreenContextType {
     
     let context: UINavigationController
     
     func makeNextPlacer() -> AnyScreenPlacer<NavigationContext> {
         return NavigationPlacer(navigationController: context).asAnyPlacer()
+    }
+    
+}
+
+struct TabBarContext: ScreenContextType {
+    
+    let context: UITabBarController
+    
+    func makeNextPlacer() -> AnyScreenPlacer<ModalContext> {
+        return ModalPlacer(presenting: context).asAnyPlacer()
     }
     
 }
@@ -103,7 +115,7 @@ struct RootTabBarPlacer<RootScreen: RootScreenType> where RootScreen: UITabBarCo
         self.tabBarController = RootScreen.createEmptyRoot()
     }
     
-    func makePlacers(_ tabCount: Int, placeTabBar: @escaping (UITabBarController) -> Void) -> [AnyScreenPlacer<ModalContext>] {
+    func makePlacers(_ tabCount: Int, placeTabBar: @escaping (UITabBarController) -> Void) -> [AnyScreenPlacer<TabBarContext>] {
         
         var placingBuffer: [UIViewController?] = Array<UIViewController?>.init(repeating: nil, count: tabCount) {
             didSet {
@@ -114,10 +126,10 @@ struct RootTabBarPlacer<RootScreen: RootScreenType> where RootScreen: UITabBarCo
             }
         }
         
-        return (0..<tabCount).map({ index -> AnyScreenPlacer<ModalContext> in
-            return AnyScreenPlacer<ModalContext>() { toPlace in
+        return (0..<tabCount).map({ index -> AnyScreenPlacer<TabBarContext> in
+            return AnyScreenPlacer<TabBarContext>() { toPlace in
                 placingBuffer[index] = toPlace
-                return ModalContext.init(context: self.tabBarController)
+                return TabBarContext.init(context: self.tabBarController)
             }
         })
         
@@ -144,6 +156,13 @@ extension ScreenContextType {
             self.context.present(navigationController, animated: true, completion: nil)
             return NavigationContext.init(context: navigationController)
         })
+    }
+    
+    func makeTabBarPlacer<RootScreen: RootScreenType>(_ rootScreenType: RootScreen.Type, _ tabCount: Int) -> [AnyScreenPlacer<TabBarContext>] where RootScreen: UITabBarController {
+        let modalPlacer = makeModalPlacer()
+        return RootTabBarPlacer<RootScreen>().makePlacers(tabCount) { rootScreen in
+            _ = modalPlacer.place(rootScreen)
+        }
     }
     
 }
