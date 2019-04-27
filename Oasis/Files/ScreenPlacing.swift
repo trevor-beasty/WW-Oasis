@@ -56,37 +56,11 @@ internal class ScreenPlacerSink<Base: AnyObject, NextScreenContext: ScreenContex
     
 }
 
-internal class ModalPlacer: ScreenPlacerSink<UIViewController, ModalContext> {
-    
-    init(_ presenting: WeakBox<UIViewController>) {
-        super.init(.weak(presenting)) { (base, toPlace) -> ModalContext in
-            base.present(toPlace, animated: true, completion: nil)
-            return ModalContext.init(context: WeakBox<UIViewController>(toPlace))
-        }
+internal func modalPlacer(_ presenting: WeakBox<UIViewController>) -> ScreenPlacerSink<UIViewController, ModalContext> {
+    return ScreenPlacerSink<UIViewController, ModalContext>.init(.weak(presenting)) { (base, toPlace) -> ModalContext in
+        base.present(toPlace, animated: true, completion: nil)
+        return ModalContext.init(context: WeakBox<UIViewController>(toPlace))
     }
-    
-}
-
-internal class NavigationPlacer: ScreenPlacerSink<UINavigationController, NavigationContext> {
-    
-    init(_ navigationController: WeakBox<UINavigationController>) {
-        super.init(.weak(navigationController)) { (base, toPlace) -> NavigationContext in
-            base.pushViewController(toPlace, animated: true)
-            return NavigationContext.init(context: WeakBox<UINavigationController>(base))
-        }
-    }
-    
-}
-
-internal class WindowPlacer: ScreenPlacerSink<UIWindow, ModalContext> {
-    
-    init(_ window: WeakBox<UIWindow>) {
-        super.init(.weak(window)) { (base, toPlace) -> ModalContext in
-            base.rootViewController = toPlace
-            return ModalContext(context: WeakBox<UIViewController>(toPlace))
-        }
-    }
-    
 }
 
 public class ScreenPlacer<NextScreenContext: ScreenContextType>: ScreenPlacerType {
@@ -135,6 +109,17 @@ extension ScreenPlacerType {
             _ = try? self.place(base)
             return NavigationContext.init(context: WeakBox<UINavigationController>(base))
         }.asPlacer()
+    }
+    
+}
+
+enum ScreenPlacement {
+    
+    public static func makeWindowPlacer(_ window: UIWindow) -> ScreenPlacer<ModalContext> {
+        return ScreenPlacerSink<UIWindow, ModalContext>.init(.weak(WeakBox(window)), place: { (base, toPlace) -> ModalContext in
+            base.rootViewController = toPlace
+            return ModalContext(context: WeakBox(toPlace))
+        }).asPlacer()
     }
     
 }

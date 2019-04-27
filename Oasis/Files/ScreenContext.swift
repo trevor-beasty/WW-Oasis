@@ -24,7 +24,7 @@ public struct ModalContext: RecursiveScreenContextType {
     public let context: WeakBox<UIViewController>
     
     public func makeNextPlacer() -> ScreenPlacer<ModalContext> {
-        return ModalPlacer(context).asPlacer()
+        return modalPlacer(context).asPlacer()
     }
     
 }
@@ -34,7 +34,10 @@ public struct NavigationContext: RecursiveScreenContextType {
     public let context: WeakBox<UINavigationController>
     
     public func makeNextPlacer() -> ScreenPlacer<NavigationContext> {
-        return NavigationPlacer(context).asPlacer()
+        return ScreenPlacerSink<UINavigationController, NavigationContext>.init(.weak(context)) { base, toPlace in
+            base.pushViewController(toPlace, animated: true)
+            return NavigationContext.init(context: WeakBox(base))
+        }.asPlacer()
     }
     
 }
@@ -44,7 +47,7 @@ public struct TabBarContext: ScreenContextType {
     public let context: WeakBox<UITabBarController>
     
     public func makeNextPlacer() -> ScreenPlacer<ModalContext> {
-        return ModalPlacer(context.map({ $0 as UIViewController })).asPlacer()
+        return modalPlacer(context.map({ $0 as UIViewController })).asPlacer()
     }
     
 }
@@ -65,7 +68,7 @@ public struct PageContext: RecursiveScreenContextType {
 extension ScreenContextType {
     
     public func makeModalPlacer() -> ScreenPlacer<ModalContext> {
-        return ModalPlacer.init(context.map({ $0 as UIViewController })).asPlacer()
+        return modalPlacer(context.map({ $0 as UIViewController })).asPlacer()
     }
     
     public func makeNavigationEmbeddedModalPlacer(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
