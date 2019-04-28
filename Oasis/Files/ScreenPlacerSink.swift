@@ -11,8 +11,15 @@ import UIKit
 
 public enum ScreenPlacement {
     
-    public static func makePlacer<Base: AnyObject, NextScreenContext: UIViewController>(_ base: Base, place: @escaping (Base, UIViewController) -> NextScreenContext) -> ScreenPlacer<NextScreenContext> {
-        let sink = ScreenPlacerSink<Base, NextScreenContext>.init(.weak(WeakBox(base)), place: place)
+    public static func makePlacer<Base: AnyObject, NextScreenContext: UIViewController>(_ base: Base, isEmbedding: Bool = false, place: @escaping (Base, UIViewController) throws -> NextScreenContext) -> ScreenPlacer<NextScreenContext> {
+        let weakStrong: WeakStrong<Base>
+        if isEmbedding {
+            weakStrong = .strong(base)
+        }
+        else {
+            weakStrong = .weak(WeakBox(base))
+        }
+        let sink = ScreenPlacerSink<Base, NextScreenContext>.init(weakStrong, place: place)
         return ScreenPlacer<NextScreenContext>(sink)
     }
     

@@ -29,7 +29,7 @@ extension ScreenPlacerType {
         }
         
         return (0..<tabCount).map({ index -> ScreenPlacer<UITabBarController> in
-            return ScreenPlacement.makePlacer(tabBarController) { tabBarController, toPlace in
+            return ScreenPlacement.makePlacer(tabBarController, isEmbedding: true) { tabBarController, toPlace in
                 placingBuffer[index] = toPlace
                 return tabBarController
             }
@@ -38,7 +38,7 @@ extension ScreenPlacerType {
     }
     
     public func makeNavigationPlacer(_ navigationController: UINavigationController) -> ScreenPlacer<UINavigationController> {
-        return ScreenPlacement.makePlacer(navigationController) { navigationController, toPlace in
+        return ScreenPlacement.makePlacer(navigationController, isEmbedding: true) { navigationController, toPlace in
             navigationController.viewControllers = [toPlace]
             _ = try? self.place(navigationController)
             return navigationController
