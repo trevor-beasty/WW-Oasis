@@ -13,13 +13,13 @@ enum OnboardingAOutput {
     case didFinish
 }
 
-class FoodOnboardingFlow: ScreenFlow<OnboardingAOutput, NavigationContext> {
+class FoodOnboardingFlow: ScreenFlow<OnboardingAOutput, UINavigationController> {
     
     private weak var navigationController: UINavigationController?
     
-    override func start(_ screenPlacer: ScreenPlacer<NavigationContext>) throws {
+    override func start(_ screenPlacer: ScreenPlacer<UINavigationController>) throws {
         let initialController = assembleController(0)
-        navigationController = (try screenPlacer.place(initialController)).context.boxed
+        navigationController = try screenPlacer.place(initialController)
     }
     
     private func assembleController(_ rank: Int) -> UIViewController {
@@ -59,11 +59,11 @@ class FoodOnboardingFlow: ScreenFlow<OnboardingAOutput, NavigationContext> {
     
 }
 
-class MyDayFlow: ScreenFlow<None, ModalContext> {
+class MyDayFlow: ScreenFlow<None, UIViewController> {
     
     private weak var tabBarController: UITabBarController?
     
-    override func start(_ screenPlacer: ScreenPlacer<ModalContext>) throws {
+    override func start(_ screenPlacer: ScreenPlacer<UIViewController>) throws {
         let tabBarController = UITabBarController()
         
         let tabBarPlacers = screenPlacer.makeTabBarPlacers(tabBarController, tabCount: 2)

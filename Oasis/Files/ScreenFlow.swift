@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class ScreenFlow<Output, ScreenContext: ScreenContextType>: Module<None, Output> {
+class ScreenFlow<Output, ScreenContext: UIViewController>: Module<None, Output> {
     
     open func start(_ screenPlacer: ScreenPlacer<ScreenContext>) throws {
         fatalError(abstractMethodMessage)
