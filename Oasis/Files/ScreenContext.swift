@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public protocol ScreenContextType {
+public protocol ScreenContextType: AnyObject {
     associatedtype Context: UIViewController
     associatedtype RecursiveContext: RecursiveScreenContextType
     
@@ -19,9 +19,13 @@ public protocol ScreenContextType {
 
 public protocol RecursiveScreenContextType: ScreenContextType where RecursiveContext == Self { }
 
-public struct ModalContext: RecursiveScreenContextType {
+public class ModalContext: RecursiveScreenContextType {
     
     public let context: WeakBox<UIViewController>
+    
+    internal init(_ viewController: UIViewController) {
+        self.context = WeakBox(viewController)
+    }
     
     public func makeNextPlacer() -> ScreenPlacer<ModalContext> {
         return modalPlacer(context).asPlacer()
@@ -29,22 +33,30 @@ public struct ModalContext: RecursiveScreenContextType {
     
 }
 
-public struct NavigationContext: RecursiveScreenContextType {
+public class NavigationContext: RecursiveScreenContextType {
     
     public let context: WeakBox<UINavigationController>
+    
+    internal init(_ navigationController: UINavigationController) {
+        self.context = WeakBox(navigationController)
+    }
     
     public func makeNextPlacer() -> ScreenPlacer<NavigationContext> {
         return ScreenPlacerSink<UINavigationController, NavigationContext>.init(.weak(context)) { base, toPlace in
             base.pushViewController(toPlace, animated: true)
-            return NavigationContext.init(context: WeakBox(base))
+            return NavigationContext(base)
         }.asPlacer()
     }
     
 }
 
-public struct TabBarContext: ScreenContextType {
+public class TabBarContext: ScreenContextType {
     
     public let context: WeakBox<UITabBarController>
+    
+    internal init(_ tabBarController: UITabBarController) {
+        self.context = WeakBox(tabBarController)
+    }
     
     public func makeNextPlacer() -> ScreenPlacer<ModalContext> {
         return modalPlacer(context.map({ $0 as UIViewController })).asPlacer()
@@ -52,14 +64,18 @@ public struct TabBarContext: ScreenContextType {
     
 }
 
-public struct PageContext: RecursiveScreenContextType {
+public class PageContext: RecursiveScreenContextType {
     
     public let context: WeakBox<UIPageViewController>
+    
+    internal init(_ pageViewController: UIPageViewController) {
+        self.context = WeakBox(pageViewController)
+    }
     
     public func makeNextPlacer() -> ScreenPlacer<PageContext> {
         return ScreenPlacerSink<UIPageViewController, PageContext>(.weak(context)) { base, toPlace in
             base.setViewControllers([toPlace], direction: .forward, animated: true, completion: nil)
-            return PageContext.init(context: WeakBox(base))
+            return PageContext(base)
         }.asPlacer()
     }
     
