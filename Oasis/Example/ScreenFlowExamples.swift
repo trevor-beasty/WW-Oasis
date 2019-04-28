@@ -17,9 +17,9 @@ class FoodOnboardingFlow: ScreenFlow<OnboardingAOutput, NavigationContext> {
     
     private weak var navigationController: UINavigationController?
     
-    override func start(_ screenPlacer: ScreenPlacer<NavigationContext>) {
+    override func start(_ screenPlacer: ScreenPlacer<NavigationContext>) throws {
         let initialController = assembleController(0)
-        navigationController = (try? screenPlacer.place(initialController))?.context.boxed
+        navigationController = (try screenPlacer.place(initialController)).context.boxed
     }
     
     private func assembleController(_ rank: Int) -> UIViewController {
@@ -63,12 +63,18 @@ class MyDayFlow: ScreenFlow<None, ModalContext> {
     
     private weak var tabBarController: UITabBarController?
     
-    override func start(_ screenPlacer: ScreenPlacer<ModalContext>) {
+    override func start(_ screenPlacer: ScreenPlacer<ModalContext>) throws {
         let tabBarController = UITabBarController()
-        let tabBarPlacers = screenPlacer.embedIn(tabBarController, tabCount: 2)
-        FoodOnboardingFlow().start(tabBarPlacers[0].embedIn(UINavigationController()))
+        
+        let tabBarPlacers = screenPlacer.makeTabBarPlacers(tabBarController, tabCount: 2)
+        
+        let tabBarPlacer0 = tabBarPlacers[0].makeNavigationPlacer(UINavigationController())
+        let foodOnboardingFlow = FoodOnboardingFlow()
+        try foodOnboardingFlow.start(tabBarPlacer0)
+        
         let controller1 = TextController(color: .orange, text: "Apple's love to dance!")
-        _ = try? tabBarPlacers[1].place(controller1)
+        _ = try tabBarPlacers[1].place(controller1)
+        
         self.tabBarController = tabBarController
     }
     

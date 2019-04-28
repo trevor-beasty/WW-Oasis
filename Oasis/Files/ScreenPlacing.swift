@@ -83,7 +83,7 @@ extension ScreenPlacerType {
         return ScreenPlacer<NextScreenContext>.init(self)
     }
     
-    public func embedIn(_ tabBarController: UITabBarController, tabCount: Int) -> [ScreenPlacer<TabBarContext>] {
+    public func makeTabBarPlacers(_ tabBarController: UITabBarController, tabCount: Int) -> [ScreenPlacer<TabBarContext>] {
         
         var placingBuffer: [UIViewController?] = Array<UIViewController?>.init(repeating: nil, count: tabCount) {
             didSet {
@@ -103,7 +103,7 @@ extension ScreenPlacerType {
 
     }
     
-    public func embedIn(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
+    public func makeNavigationPlacer(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
         return ScreenPlacerSink<UINavigationController, NavigationContext>(.strong(navigationController)) { base, toPlace in
             base.viewControllers = [toPlace]
             _ = try? self.place(base)

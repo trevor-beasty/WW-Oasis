@@ -73,7 +73,7 @@ extension ScreenContextType {
     
     public func makeNavigationEmbeddedModalPlacer(_ navigationController: UINavigationController) -> ScreenPlacer<NavigationContext> {
         return makeModalPlacer()
-            .embedIn(navigationController)
+            .makeNavigationPlacer(navigationController)
     }
     
 }
