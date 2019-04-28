@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard let window = window else { fatalError() }
         let windowPlacer = ScreenPlacement.makeWindowPlacer(window)
         let myDayFlow = MyDayFlow()
-        try? myDayFlow.start(windowPlacer)
+        try? myDayFlow.start(with: windowPlacer)
         return true
     }
     

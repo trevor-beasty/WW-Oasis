@@ -17,7 +17,7 @@ class FoodOnboardingFlow: ScreenFlow<OnboardingAOutput, UINavigationController> 
     
     private weak var navigationController: UINavigationController?
     
-    override func start(_ screenPlacer: ScreenPlacer<UINavigationController>) throws {
+    override func start(with screenPlacer: ScreenPlacer<UINavigationController>) throws {
         let initialController = assembleController(0)
         navigationController = try screenPlacer.place(initialController)
     }
@@ -63,14 +63,14 @@ class MyDayFlow: ScreenFlow<None, UIViewController> {
     
     private weak var tabBarController: UITabBarController?
     
-    override func start(_ screenPlacer: ScreenPlacer<UIViewController>) throws {
+    override func start(with screenPlacer: ScreenPlacer<UIViewController>) throws {
         let tabBarController = UITabBarController()
         
-        let tabBarPlacers = screenPlacer.makeTabBarPlacers(tabBarController, tabCount: 2)
+        let tabBarPlacers = screenPlacer.makeTabBarPlacers(tabBarController, tabsCount: 2)
         
         let tabBarPlacer0 = tabBarPlacers[0].makeNavigationPlacer(UINavigationController())
         let foodOnboardingFlow = FoodOnboardingFlow()
-        try foodOnboardingFlow.start(tabBarPlacer0)
+        try foodOnboardingFlow.start(with: tabBarPlacer0)
         
         let controller1 = TextController(color: .orange, text: "Apple's love to dance!")
         _ = try tabBarPlacers[1].place(controller1)

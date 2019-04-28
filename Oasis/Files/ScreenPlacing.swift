@@ -17,18 +17,18 @@ public protocol ScreenPlacerType: AnyObject {
 
 extension ScreenPlacerType {
     
-    public func makeTabBarPlacers(_ tabBarController: UITabBarController, tabCount: Int) -> [ScreenPlacer<UITabBarController>] {
+    public func makeTabBarPlacers(_ tabBarController: UITabBarController, tabsCount: Int) -> [ScreenPlacer<UITabBarController>] {
         
-        var placingBuffer: [UIViewController?] = Array<UIViewController?>.init(repeating: nil, count: tabCount) {
+        var placingBuffer: [UIViewController?] = Array<UIViewController?>.init(repeating: nil, count: tabsCount) {
             didSet {
                 let placed = placingBuffer.compactMap({ $0 })
-                guard placed.count == tabCount else { return }
+                guard placed.count == tabsCount else { return }
                 tabBarController.setViewControllers(placed, animated: false)
                 _ = try? self.place(tabBarController)
             }
         }
         
-        return (0..<tabCount).map({ index -> ScreenPlacer<UITabBarController> in
+        return (0..<tabsCount).map({ index -> ScreenPlacer<UITabBarController> in
             return ScreenPlacement.makePlacer(tabBarController, isEmbedding: true) { tabBarController, toPlace in
                 placingBuffer[index] = toPlace
                 return tabBarController
