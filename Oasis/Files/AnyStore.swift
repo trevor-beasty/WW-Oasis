@@ -13,13 +13,13 @@ public class AnyStore<State, Action, Output>: StoreType {
     
     private let _handleAction: (Action) -> Void
     private let _observeStatefulOutput: (@escaping (Output, State) -> Void) -> Void
-    public let stateBinder: Binder<State>
+    public let binder: IndirectBinder<State>
     public let objectBinder: ObjectBinder
     
     internal init<Store: StoreType>(_ store: Store) where Store.State == State, Store.Action == Action, Store.Output == Output {
         self._handleAction = store.handleAction
         self._observeStatefulOutput = store.observeStatefulOutput
-        self.stateBinder = store.stateBinder
+        self.binder = IndirectBinder(store.binder)
         self.objectBinder = store.objectBinder
     }
     

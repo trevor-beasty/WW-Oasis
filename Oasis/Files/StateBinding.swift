@@ -9,13 +9,19 @@
 
 import Foundation
 
-public typealias ChangeHandler<T> = (_ oldValue: T?, _ newValue: T) -> Void
+public typealias Observer<T> = (_ oldValue: T?, _ newValue: T) -> Void
 
-public final class Binder<Value> {
+public protocol BinderType: AnyObject {
+    associatedtype Value
     
-    internal private(set) var value: Value
+    var value: Value { get }
+    func observe(_ observer: @escaping Observer<Value>)
+}
+
+public final class SourceBinder<Value>: BinderType {
     
-    internal var observations: [ChangeHandler<Value>] = []
+    public private(set) var value: Value
+    private var observers: [Observer<Value>] = []
     
     internal init(_ value: Value) {
         self.value = value
@@ -24,32 +30,75 @@ public final class Binder<Value> {
     internal func set(newValue: Value) {
         let oldValue = value
         value = newValue
-        let _observations = observations
+        let _observers = observers
         DispatchQueue.main.async {
-            _observations.forEach({ $0(oldValue, newValue) })
+            _observers.forEach({ $0(oldValue, newValue) })
         }
     }
-}
-
-public protocol StateBindable: AnyObject {
-    associatedtype State
-    associatedtype R
     
-    var stateBinder: Binder<State> { get }
-    var stateTransform: (State) -> R { get }
-}
-
-extension StateBindable {
-    
-    public func bind(_ handler: @escaping ChangeHandler<R>) {
-        handler(nil, stateTransform(stateBinder.value))
-        let _transform = stateTransform
-        stateBinder.observations.append({ oldValue, newValue in
-            handler(oldValue.flatMap({ _transform($0) }), _transform(newValue))
-        })
+    public func observe(_ observer: @escaping Observer<Value>) {
+        observers.append(observer)
     }
     
-    public func bind<Property>(_ keyPath: KeyPath<R, Property>, to handler: @escaping ChangeHandler<Property>) {
+}
+
+public final class IndirectBinder<Value>: BinderType {
+    
+    private let _observe: (@escaping Observer<Value>) -> Void
+    private let _value: () -> Value
+    
+    internal init<SourceBinder: BinderType>(_ sourceBinder: SourceBinder, _ transform: @escaping (SourceBinder.Value) -> Value) {
+        
+        _observe = { observer in
+            sourceBinder.observe({ s0, s1 in
+                let v0: Value?
+                if let s0 = s0 {
+                    v0 = transform(s0)
+                }
+                else {
+                    v0 = nil
+                }
+                let v1 = transform(s1)
+                observer(v0, v1)
+            })
+        }
+        
+        _value = {
+            return transform(sourceBinder.value)
+        }
+        
+    }
+    
+    internal convenience init<SourceBinder: BinderType>(_ sourceBinder: SourceBinder) where SourceBinder.Value == Value {
+        self.init(sourceBinder, { $0 })
+    }
+    
+    public var value: Value {
+        return _value()
+    }
+    
+    public func observe(_ observer: @escaping (Value?, Value) -> Void) {
+        _observe(observer)
+    }
+    
+}
+
+public protocol BinderHostType: AnyObject {
+    associatedtype Binder: BinderType
+    
+    typealias Value = Binder.Value
+    
+    var binder: Binder { get }
+}
+
+extension BinderHostType {
+    
+    public func bind(_ handler: @escaping Observer<Value>) {
+        handler(nil, binder.value)
+        binder.observe(handler)
+    }
+    
+    public func bind<Property>(_ keyPath: KeyPath<Value, Property>, to handler: @escaping Observer<Property>) {
         bind { oldValue, value in
             let oldKeyValue = oldValue.flatMap({ $0[keyPath: keyPath] })
             let newKeyValue = value[keyPath: keyPath]
@@ -57,7 +106,7 @@ extension StateBindable {
         }
     }
     
-    public func bind<Property>(_ keyPath: KeyPath<R, Property>, to handler: @escaping ChangeHandler<Property>) where Property: Equatable {
+    public func bind<Property>(_ keyPath: KeyPath<Value, Property>, to handler: @escaping Observer<Property>) where Property: Equatable {
         bind { oldValue, value in
             let oldKeyValue = oldValue.flatMap({ $0[keyPath: keyPath] })
             let newKeyValue = value[keyPath: keyPath]
@@ -66,35 +115,17 @@ extension StateBindable {
         }
     }
     
-    public var state: State {
-        return stateBinder.value
-    }
-    
 }
 
-extension StateBindable where R: Equatable {
+extension BinderHostType where Value: Equatable {
     
-    public func bind(_ handler: @escaping ChangeHandler<R>) {
-        handler(nil, stateTransform(stateBinder.value))
-        let _transform = stateTransform
-        stateBinder.observations.append({ oldValue, newValue in
-            guard oldValue.flatMap({ _transform($0) }) != _transform(newValue) else { return }
-            handler(oldValue.flatMap({ _transform($0) }), _transform(newValue))
-        })
+    public func bind(_ handler: @escaping Observer<Value>) {
+        handler(nil, binder.value)
+        let _observer: Observer<Value> = { oldValue, newValue in
+            if let oldValue = oldValue, oldValue == newValue { return  }
+            handler(oldValue, newValue)
+        }
+        binder.observe(_observer)
     }
     
-}
-
-extension StateBindable where State == R {
-    
-    public var stateTransform: (State) -> R {
-        return { state in return state }
-    }
-    
-    public func update(_ mutate: (inout State) -> Void) {
-        var copy = stateBinder.value
-        mutate(&copy)
-        stateBinder.set(newValue: copy)
-    }
-
 }

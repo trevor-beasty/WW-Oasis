@@ -11,17 +11,15 @@ public protocol StoreDefinition: ModuleDefinition {
     associatedtype State
 }
 
-public protocol StoreType: StoreDefinition, StateBindable, ObjectBindable {
+public protocol StoreType: StoreDefinition, BinderHostType, ObjectBindable where Binder.Value == State {
     func handleAction(_ action: Action)
     func observeStatefulOutput(_ observer: @escaping (Output, State) -> Void)
 }
 
 open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definition.Output>, StoreType {
     public typealias State = Definition.State
-    public typealias R = State
     
-    public private(set) var stateBinder: Binder<State>
-    private var stateObservers: [(State) -> Void] = []
+    public let binder: SourceBinder<State>
     public let objectBinder = ObjectBinder()
     
     public static func create(with initialState: State) -> AnyStore<State, Action, Output> {
@@ -30,13 +28,13 @@ open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definit
     }
     
     public required init(initialState: State) {
-        self.stateBinder = Binder(initialState)
+        self.binder = SourceBinder(initialState)
     }
     
     public func observeStatefulOutput(_ observer: @escaping (Output, State) -> Void) {
         observeOutput({ [weak self] output in
             guard let strongSelf = self else { return }
-            observer(output, strongSelf .stateBinder.value)
+            observer(output, strongSelf.binder.value)
         })
     }
     
