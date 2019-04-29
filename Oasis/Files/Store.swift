@@ -11,17 +11,12 @@ public protocol StoreDefinition: ModuleDefinition {
     associatedtype State
 }
 
-public protocol ViewDefinition {
-    associatedtype ViewState
-    associatedtype ViewAction
-}
-
-public protocol StoreProtocol: StoreDefinition, StateBindable, ObjectBindable {
+public protocol StoreType: StoreDefinition, StateBindable, ObjectBindable {
     func handleAction(_ action: Action)
     func observeStatefulOutput(_ observer: @escaping (Output, State) -> Void)
 }
 
-open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definition.Output>, StoreProtocol {
+open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definition.Output>, StoreType {
     public typealias State = Definition.State
     public typealias R = State
     
@@ -29,7 +24,7 @@ open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definit
     private var stateObservers: [(State) -> Void] = []
     public let objectBinder = ObjectBinder()
     
-    public static func create(with initialState: State) -> AnyStore<Store<Definition>> {
+    public static func create(with initialState: State) -> AnyStore<State, Action, Output> {
         let store = self.init(initialState: initialState)
         return store.asAnyStore()
     }
