@@ -8,23 +8,27 @@
 
 import Foundation
 
-public protocol ViewStoreType: ViewDefinition, BinderHostType where Binder.Value == ViewState {
+public protocol ViewStoreType: ViewDefinition, BinderHostType where BindableValue == ViewState {
     var viewState: ViewState { get }
     func dispatchAction(_ viewAction: ViewAction)
 }
 
 public class AnyViewStore<ViewState, ViewAction>: ViewStoreType {
     
-    public let binder: IndirectBinder<ViewState>
+    private let indirectBinder: IndirectBinder<ViewState>
     private let _dispatchAction: (ViewAction) -> Void
     
     internal init<ViewStore: ViewStoreType>(_ viewStore: ViewStore) where ViewStore.ViewState == ViewState, ViewStore.ViewAction == ViewAction {
-        self.binder = IndirectBinder<ViewState>.init(viewStore.binder)
+        self.indirectBinder = IndirectBinder<ViewState>.init(viewStore.binder)
         self._dispatchAction = viewStore.dispatchAction
     }
     
     public func dispatchAction(_ viewAction: ViewAction) {
         _dispatchAction(viewAction)
+    }
+    
+    public var binder: AnyBinder<ViewState> {
+        return indirectBinder.asBinder()
     }
     
 }
@@ -33,11 +37,11 @@ internal class ViewStoreAdapter<Store: AbstractStoreType, View: ViewType>: ViewS
     typealias ViewState = View.ViewState
     typealias ViewAction = View.ViewAction
     
-    public let binder: IndirectBinder<ViewState>
+    private let indirectBinder: IndirectBinder<ViewState>
     private let _dispatchAction: (ViewAction) -> Void
     
     internal init(_ store: Store, stateMap: @escaping (Store.State) -> ViewState, actionMap: @escaping (ViewAction) -> Store.Action) {
-        self.binder = IndirectBinder<View.ViewState>.init(store.binder, stateMap)
+        self.indirectBinder = IndirectBinder<View.ViewState>.init(store.binder, stateMap)
         
         self._dispatchAction = { viewAction in
             let action = actionMap(viewAction)
@@ -48,6 +52,10 @@ internal class ViewStoreAdapter<Store: AbstractStoreType, View: ViewType>: ViewS
     
     func dispatchAction(_ viewAction: ViewAction) {
         _dispatchAction(viewAction)
+    }
+    
+    public var binder: AnyBinder<ViewState> {
+        return indirectBinder.asBinder()
     }
     
 }

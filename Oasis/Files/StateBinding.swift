@@ -18,6 +18,34 @@ public protocol BinderType: AnyObject {
     func observe(_ observer: @escaping Observer<Value>)
 }
 
+public class AnyBinder<Value>: BinderType {
+    
+    private let _value: () -> Value
+    private let _observe: (@escaping Observer<Value>) -> Void
+    
+    internal init<Binder: BinderType>(_ binder: Binder) where Binder.Value == Value {
+        self._value = { return binder.value }
+        self._observe = binder.observe
+    }
+    
+    public var value: Value {
+        return _value()
+    }
+    
+    public func observe(_ observer: @escaping (Value?, Value) -> Void) {
+        _observe(observer)
+    }
+    
+}
+
+extension BinderType {
+    
+    func asBinder() -> AnyBinder<Value> {
+        return AnyBinder<Value>(self)
+    }
+    
+}
+
 public final class SourceBinder<Value>: BinderType {
     
     public private(set) var value: Value
@@ -85,21 +113,19 @@ public final class IndirectBinder<Value>: BinderType {
 }
 
 public protocol BinderHostType: AnyObject {
-    associatedtype Binder: BinderType
+    associatedtype BindableValue
     
-    typealias Value = Binder.Value
-    
-    var binder: Binder { get }
+    var binder: AnyBinder<BindableValue> { get }
 }
 
 extension BinderHostType {
     
-    public func bind(_ handler: @escaping Observer<Value>) {
+    public func bind(_ handler: @escaping Observer<BindableValue>) {
         handler(nil, binder.value)
         binder.observe(handler)
     }
     
-    public func bind<Property>(_ keyPath: KeyPath<Value, Property>, to handler: @escaping Observer<Property>) {
+    public func bind<Property>(_ keyPath: KeyPath<BindableValue, Property>, to handler: @escaping Observer<Property>) {
         bind { oldValue, value in
             let oldKeyValue = oldValue.flatMap({ $0[keyPath: keyPath] })
             let newKeyValue = value[keyPath: keyPath]
@@ -107,7 +133,7 @@ extension BinderHostType {
         }
     }
     
-    public func bind<Property>(_ keyPath: KeyPath<Value, Property>, to handler: @escaping Observer<Property>) where Property: Equatable {
+    public func bind<Property>(_ keyPath: KeyPath<BindableValue, Property>, to handler: @escaping Observer<Property>) where Property: Equatable {
         bind { oldValue, value in
             let oldKeyValue = oldValue.flatMap({ $0[keyPath: keyPath] })
             let newKeyValue = value[keyPath: keyPath]
@@ -118,11 +144,11 @@ extension BinderHostType {
     
 }
 
-extension BinderHostType where Value: Equatable {
+extension BinderHostType where BindableValue: Equatable {
     
-    public func bind(_ handler: @escaping Observer<Value>) {
+    public func bind(_ handler: @escaping Observer<BindableValue>) {
         handler(nil, binder.value)
-        let _observer: Observer<Value> = { oldValue, newValue in
+        let _observer: Observer<BindableValue> = { oldValue, newValue in
             if let oldValue = oldValue, oldValue == newValue { return  }
             handler(oldValue, newValue)
         }

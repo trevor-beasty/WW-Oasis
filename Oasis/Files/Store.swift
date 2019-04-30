@@ -13,7 +13,7 @@ public protocol StoreDefinition: ModuleDefinition {
     typealias Store = AnyStore<State, Action, Output>
 }
 
-public protocol AbstractStoreType: BinderHostType, ObjectBindable where Binder.Value == State {
+public protocol AbstractStoreType: BinderHostType, ObjectBindable where BindableValue == State {
     associatedtype State
     associatedtype Action
     associatedtype Output
@@ -31,19 +31,19 @@ open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definit
     public typealias Action = Definition.Action
     public typealias Output = Definition.Output
     
-    public let binder: SourceBinder<State>
+    private let sourceBinder: SourceBinder<State>
     public let objectBinder = ObjectBinder()
     
     private var pendingUpdates: [Update<State>] = []
     
     public required init(_ initialState: State) {
-        self.binder = SourceBinder(initialState)
+        self.sourceBinder = SourceBinder(initialState)
     }
     
     public func observeStatefulOutput(_ observer: @escaping (Output, State) -> Void) {
         observeOutput({ [weak self] output in
             guard let strongSelf = self else { return }
-            observer(output, strongSelf.binder.value)
+            observer(output, strongSelf.sourceBinder.value)
         })
     }
     
@@ -57,13 +57,17 @@ open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definit
     }
     
     private func applyUpdates() {
-        let updated = pendingUpdates.reduce(state) { (lastState, nextUpdate) -> State in
+        let updated = pendingUpdates.reduce(sourceBinder.value) { (lastState, nextUpdate) -> State in
             var copy = lastState
             nextUpdate(&copy)
             return copy
         }
-        binder.set(newValue: updated)
+        sourceBinder.set(newValue: updated)
         pendingUpdates = []
+    }
+    
+    public var binder: AnyBinder<State> {
+        return sourceBinder.asBinder()
     }
     
 }

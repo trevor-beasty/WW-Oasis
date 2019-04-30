@@ -129,6 +129,10 @@ class SearchViewController: UIViewController, ViewType {
     
     private let viewStore: ViewStore
     
+    private let searchBar = UISearchBar()
+    private let itemsTable = UITableView()
+    private let activityIndicator = UIActivityIndicatorView(style: .gray)
+    
     required init(viewStore: AnyViewStore<ViewState, ViewAction>) {
         self.viewStore = viewStore
         super.init(nibName: nil, bundle: nil)
@@ -138,12 +142,55 @@ class SearchViewController: UIViewController, ViewType {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUp()
         bind()
+    }
+    
+    private func setUp() {
+        
+        func setUpConstraints() {
+            [searchBar, itemsTable, activityIndicator].forEach({
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                view.addSubview($0)
+            })
+            let constraints = [
+                searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                searchBar.leftAnchor.constraint(equalTo: view.leftAnchor),
+                searchBar.rightAnchor.constraint(equalTo: view.rightAnchor),
+                searchBar.heightAnchor.constraint(equalToConstant: 50),
+                itemsTable.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+                itemsTable.leftAnchor.constraint(equalTo: view.leftAnchor),
+                itemsTable.rightAnchor.constraint(equalTo: view.rightAnchor),
+                itemsTable.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                activityIndicator.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                activityIndicator.leftAnchor.constraint(equalTo: view.leftAnchor),
+                activityIndicator.rightAnchor.constraint(equalTo: view.rightAnchor),
+                activityIndicator.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            ]
+            NSLayoutConstraint.activate(constraints)
+        }
+        
+        setUpConstraints()
     }
     
     private func bind() {
         
+        viewStore.bind(\.isLoading) { [activityIndicator] (_, isLoading) in
+            if isLoading {
+                if !activityIndicator.isAnimating { activityIndicator.startAnimating() }
+            }
+            else {
+                if activityIndicator.isAnimating { activityIndicator.stopAnimating() }
+            }
+        }
         
+        viewStore.bind(\.items) { [weak self] (_, _) in
+            self?.itemsTable.reloadData()
+        }
+        
+        viewStore.bind(\.searchText) { [searchBar] (_, searchText) in
+            searchBar.text = searchText
+        }
         
     }
     
