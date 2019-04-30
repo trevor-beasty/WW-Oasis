@@ -13,7 +13,13 @@ public protocol ViewDefinition {
     associatedtype ViewAction
 }
 
-public protocol ViewType: ViewDefinition {
+public protocol ViewType {
+    associatedtype Definition: ViewDefinition
+    
+    typealias ViewState = Definition.ViewState
+    typealias ViewAction = Definition.ViewAction
+    typealias ViewStore = AnyViewStore<ViewState, ViewAction>
+    
     init(viewStore: AnyViewStore<ViewState, ViewAction>)
     func render(_ viewState: ViewState)
 }

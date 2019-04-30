@@ -29,6 +29,7 @@ enum Search: StoreDefinition {
         case didPressClear
         case didSelectItem(Item)
         case viewWillAppear
+        case didAcknowledgeError
     }
     
     enum Output: Equatable {
@@ -43,6 +44,19 @@ enum Search: StoreDefinition {
     
 }
 
+enum SearchView: ViewDefinition {
+    
+    struct ViewState: Equatable {
+        let isLoading: Bool
+        let error: String?
+        let items: [Search.Item]
+        let searchText: String?
+    }
+    
+    typealias ViewAction = Search.Action
+    
+}
+
 class SearchStore: Store<Search> {
     
     var searchService: SearchServiceProtocol = SearchService()
@@ -50,22 +64,26 @@ class SearchStore: Store<Search> {
     override func handleAction(_ action: Search.Action) {
         switch action {
         case .didPressClear:
+            batchUpdate({ $0.searchText = nil })
             search(nil)
         
         case .didSelectItem(let item):
             output(.didSelectItem(item))
             
         case .didUpdateSearchText(let searchText):
+            batchUpdate({ $0.searchText = searchText })
             search(searchText)
             
         case .viewWillAppear:
             handleViewWillAppear()
+            
+        case .didAcknowledgeError:
+            update({ $0.phase = .idle })
         }
     }
     
     private func search(_ searchText: String?) {
         update({
-            $0.searchText = searchText
             $0.phase = .searching
         })
         searchService.search(searchText) { [weak self] (searchItemsResult) in
@@ -86,8 +104,10 @@ class SearchStore: Store<Search> {
     }
     
     private func handleViewWillAppear() {
-        if !state.viewDidAppear { search(state.searchText) }
-        update({ $0.viewDidAppear = true })
+        if !state.viewDidAppear {
+            batchUpdate({ $0.viewDidAppear = true })
+            search(state.searchText)
+        }
     }
     
 }
@@ -104,6 +124,31 @@ class SearchService: SearchServiceProtocol {
     
 }
 
-class SearchViewController: UIViewController {
+class SearchViewController: UIViewController, ViewType {
+    typealias Definition = SearchView
+    
+    private let viewStore: ViewStore
+    
+    required init(viewStore: AnyViewStore<ViewState, ViewAction>) {
+        self.viewStore = viewStore
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) { fatalError() }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        bind()
+    }
+    
+    private func bind() {
+        
+        
+        
+    }
+    
+    func render(_ viewState: SearchViewController.ViewState) {
+        
+    }
     
 }

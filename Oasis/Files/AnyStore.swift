@@ -9,7 +9,6 @@
 import Foundation
 
 public class AnyStore<State, Action, Output>: AbstractStoreType {
-    public typealias R = State
     
     private let _handleAction: (Action) -> Void
     private let _observeStatefulOutput: (@escaping (Output, State) -> Void) -> Void

@@ -9,9 +9,15 @@ import Foundation
 
 public protocol StoreDefinition: ModuleDefinition {
     associatedtype State
+    
+    typealias Store = AnyStore<State, Action, Output>
 }
 
-public protocol AbstractStoreType: StoreDefinition, BinderHostType, ObjectBindable where Binder.Value == State {
+public protocol AbstractStoreType: BinderHostType, ObjectBindable where Binder.Value == State {
+    associatedtype State
+    associatedtype Action
+    associatedtype Output
+    
     func handleAction(_ action: Action)
     func observeStatefulOutput(_ observer: @escaping (Output, State) -> Void)
 }
@@ -22,6 +28,8 @@ public protocol StoreType: AbstractStoreType {
 
 open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definition.Output>, StoreType {
     public typealias State = Definition.State
+    public typealias Action = Definition.Action
+    public typealias Output = Definition.Output
     
     public let binder: SourceBinder<State>
     public let objectBinder = ObjectBinder()
