@@ -35,7 +35,7 @@ public class AnyViewStore<ViewState, ViewAction>: ViewStoreType {
     
 }
 
-internal class ViewStoreAdapter<Store: StoreType, View: ViewType>: ViewStoreType {
+internal class ViewStoreAdapter<Store: AbstractStoreType, View: ViewType>: ViewStoreType {
     typealias ViewState = View.ViewState
     typealias ViewAction = View.ViewAction
     

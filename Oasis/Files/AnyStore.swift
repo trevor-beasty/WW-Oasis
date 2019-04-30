@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class AnyStore<State, Action, Output>: StoreType {
+public class AnyStore<State, Action, Output>: AbstractStoreType {
     public typealias R = State
     
     private let _state: () -> State
@@ -17,7 +17,7 @@ public class AnyStore<State, Action, Output>: StoreType {
     public let binder: IndirectBinder<State>
     public let objectBinder: ObjectBinder
     
-    internal init<Store: StoreType>(_ store: Store) where Store.State == State, Store.Action == Action, Store.Output == Output {
+    internal init<Store: AbstractStoreType>(_ store: Store) where Store.State == State, Store.Action == Action, Store.Output == Output {
         self._state = { return store.state }
         self._handleAction = store.handleAction
         self._observeStatefulOutput = store.observeStatefulOutput
@@ -39,9 +39,9 @@ public class AnyStore<State, Action, Output>: StoreType {
     
 }
 
-extension StoreType {
+extension AbstractStoreType {
     
-    public func asStore() -> AnyStore<State, Action, Output> {
+    internal func asStore() -> AnyStore<State, Action, Output> {
         return AnyStore<State, Action, Output>.init(self)
     }
     

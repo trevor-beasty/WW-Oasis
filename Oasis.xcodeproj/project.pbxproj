@@ -25,6 +25,7 @@
 		E25B46552277741900DA207E /* StoreExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25B46542277741900DA207E /* StoreExamples.swift */; };
 		E25B4657227774D600DA207E /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25B4656227774D600DA207E /* View.swift */; };
 		E25B4659227775CC00DA207E /* AnyViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25B4658227775CC00DA207E /* AnyViewStore.swift */; };
+		E25B465B22788D6E00DA207E /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25B465A22788D6E00DA207E /* Screen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		E25B46542277741900DA207E /* StoreExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreExamples.swift; sourceTree = "<group>"; };
 		E25B4656227774D600DA207E /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		E25B4658227775CC00DA207E /* AnyViewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyViewStore.swift; sourceTree = "<group>"; };
+		E25B465A22788D6E00DA207E /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +137,7 @@
 				E253AC732272534100853431 /* ScreenFlow.swift */,
 				E253AC7B2274B4AE00853431 /* ScreenPlacing.swift */,
 				E253AC822275FEBC00853431 /* ScreenPlacerSink.swift */,
+				E25B465A22788D6E00DA207E /* Screen.swift */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 				E253AC66227245BA00853431 /* Abstract.swift in Sources */,
 				E25B4659227775CC00DA207E /* AnyViewStore.swift in Sources */,
 				E253AC642272434500853431 /* StateBinding.swift in Sources */,
+				E25B465B22788D6E00DA207E /* Screen.swift in Sources */,
 				E253AC742272534100853431 /* ScreenFlow.swift in Sources */,
 				E25B46552277741900DA207E /* StoreExamples.swift in Sources */,
 				E253AC7F2274B5F200853431 /* ScreenFlowExamples.swift in Sources */,

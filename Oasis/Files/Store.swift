@@ -11,10 +11,14 @@ public protocol StoreDefinition: ModuleDefinition {
     associatedtype State
 }
 
-public protocol StoreType: StoreDefinition, BinderHostType, ObjectBindable where Binder.Value == State {
+public protocol AbstractStoreType: StoreDefinition, BinderHostType, ObjectBindable where Binder.Value == State {
     var state: State { get }
     func handleAction(_ action: Action)
     func observeStatefulOutput(_ observer: @escaping (Output, State) -> Void)
+}
+
+public protocol StoreType: AbstractStoreType {
+    init(_ initialState: State)
 }
 
 open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definition.Output>, StoreType {
@@ -23,7 +27,7 @@ open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definit
     public let binder: SourceBinder<State>
     public let objectBinder = ObjectBinder()
     
-    public init(initialState: State) {
+    public required init(_ initialState: State) {
         self.binder = SourceBinder(initialState)
     }
     
@@ -36,15 +40,6 @@ open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definit
             guard let strongSelf = self else { return }
             observer(output, strongSelf.binder.value)
         })
-    }
-    
-}
-
-extension StoreType {
-    
-    public func adaptTo<View: ViewType>(_ viewType: View.Type, stateMap: @escaping (State) -> View.ViewState, actionMap: @escaping (View.ViewAction) -> Action) -> AnyViewStore<View.ViewState, View.ViewAction> {
-        let viewStoreAdapter = ViewStoreAdapter<Self, View>.init(self, stateMap: stateMap, actionMap: actionMap)
-        return viewStoreAdapter.asViewStore()
     }
     
 }

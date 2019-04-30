@@ -14,5 +14,6 @@ public protocol ViewDefinition {
 }
 
 public protocol ViewType: ViewDefinition {
+    init(viewStore: AnyViewStore<ViewState, ViewAction>)
     func render(_ viewState: ViewState)
 }
