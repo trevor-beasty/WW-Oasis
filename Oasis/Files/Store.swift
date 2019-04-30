@@ -26,6 +26,8 @@ open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definit
     public let binder: SourceBinder<State>
     public let objectBinder = ObjectBinder()
     
+    private var pendingUpdates: [Update<State>] = []
+    
     public required init(_ initialState: State) {
         self.binder = SourceBinder(initialState)
     }
@@ -35,6 +37,25 @@ open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definit
             guard let strongSelf = self else { return }
             observer(output, strongSelf.binder.value)
         })
+    }
+    
+    public func update(_ update: @escaping Update<State> = { _ in return }) {
+        pendingUpdates.append(update)
+        applyUpdates()
+    }
+    
+    public func batchUpdate(_ update: @escaping Update<State>) {
+        pendingUpdates.append(update)
+    }
+    
+    private func applyUpdates() {
+        let updated = pendingUpdates.reduce(state) { (lastState, nextUpdate) -> State in
+            var copy = lastState
+            nextUpdate(&copy)
+            return copy
+        }
+        binder.set(newValue: updated)
+        pendingUpdates = []
     }
     
 }

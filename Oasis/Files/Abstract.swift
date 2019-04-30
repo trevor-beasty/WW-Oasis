@@ -24,6 +24,13 @@ public final class WeakBox<T: AnyObject> {
     
 }
 
+public enum Result<T> {
+    case success(T)
+    case failure(Error)
+}
+
+public typealias Update<T> = (inout T) -> Void
+
 extension WeakBox {
     
     internal func map<R: AnyObject>(_ transform: (T) -> R) -> WeakBox<R> {
