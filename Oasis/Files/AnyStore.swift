@@ -41,7 +41,7 @@ public class AnyStore<State, Action, Output>: StoreType {
 
 extension StoreType {
     
-    func asAnyStore() -> AnyStore<State, Action, Output> {
+    public func asStore() -> AnyStore<State, Action, Output> {
         return AnyStore<State, Action, Output>.init(self)
     }
     

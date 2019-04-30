@@ -39,3 +39,12 @@ open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definit
     }
     
 }
+
+extension StoreType {
+    
+    public func adaptTo<View: ViewType>(_ viewType: View.Type, stateMap: @escaping (State) -> View.ViewState, actionMap: @escaping (View.ViewAction) -> Action) -> AnyViewStore<View.ViewState, View.ViewAction> {
+        let viewStoreAdapter = ViewStoreAdapter<Self, View>.init(self, stateMap: stateMap, actionMap: actionMap)
+        return viewStoreAdapter.asViewStore()
+    }
+    
+}

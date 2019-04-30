@@ -67,3 +67,10 @@ internal class ViewStoreAdapter<Store: StoreType, View: ViewType>: ViewStoreType
     
 }
 
+extension ViewStoreType {
+    
+    internal func asViewStore() -> AnyViewStore<ViewState, ViewAction> {
+        return AnyViewStore<ViewState, ViewAction>.init(self)
+    }
+    
+}
