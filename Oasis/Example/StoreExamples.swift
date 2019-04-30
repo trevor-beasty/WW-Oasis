@@ -132,6 +132,7 @@ class SearchViewController: UIViewController, ViewType {
     private let searchBar = UISearchBar()
     private let itemsTable = UITableView()
     private let activityIndicator = UIActivityIndicatorView(style: .gray)
+    private weak var alertController: UIAlertController?
     
     required init(viewStore: AnyViewStore<ViewState, ViewAction>) {
         self.viewStore = viewStore
@@ -144,6 +145,11 @@ class SearchViewController: UIViewController, ViewType {
         super.viewDidLoad()
         setUp()
         bind()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewStore.dispatchAction(.viewWillAppear)
     }
     
     private func setUp() {
@@ -170,7 +176,19 @@ class SearchViewController: UIViewController, ViewType {
             NSLayoutConstraint.activate(constraints)
         }
         
+        func setUpItemsTable() {
+            itemsTable.dataSource = self
+            itemsTable.delegate = self
+            itemsTable.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        }
+        
+        func setUpSearchBar() {
+            searchBar.delegate = self
+        }
+        
         setUpConstraints()
+        setUpItemsTable()
+        setUpSearchBar()
     }
     
     private func bind() {
@@ -192,10 +210,70 @@ class SearchViewController: UIViewController, ViewType {
             searchBar.text = searchText
         }
         
+        viewStore.bind(\.error) { [weak self] (_, error) in
+            if let error = error {
+                if self?.alertController == nil {
+                    self?.showError(error)
+                }
+            }
+            else {
+                if let alertController = self?.alertController {
+                    alertController.dismiss(animated: true, completion: nil)
+                }
+            }
+        }
+        
     }
     
-    func render(_ viewState: SearchViewController.ViewState) {
-        
+    private func showError(_ error: String) {
+        let alertController = UIAlertController(title: error, message: nil, preferredStyle: .alert)
+        let continueAction = UIAlertAction(title: "Continue", style: .default) { [viewStore] (_) in
+            viewStore.dispatchAction(.didAcknowledgeError)
+        }
+        alertController.addAction(continueAction)
+        present(alertController, animated: true, completion: nil)
+        self.alertController = alertController
+    }
+    
+}
+
+extension SearchViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewStore.viewState.items.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") ?? UITableViewCell()
+        let item = viewStore.viewState.items[indexPath.row]
+        cell.textLabel?.text = item.name
+        cell.detailTextLabel?.text = String(item.points)
+        return cell
+    }
+    
+}
+
+extension SearchViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let item = viewStore.viewState.items[indexPath.row]
+        viewStore.dispatchAction(.didSelectItem(item))
+    }
+    
+}
+
+extension SearchViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        viewStore.dispatchAction(.didUpdateSearchText(searchText))
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        viewStore.dispatchAction(.didPressClear)
     }
     
 }

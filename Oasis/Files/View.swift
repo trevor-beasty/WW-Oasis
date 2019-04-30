@@ -20,6 +20,5 @@ public protocol ViewType {
     typealias ViewAction = Definition.ViewAction
     typealias ViewStore = AnyViewStore<ViewState, ViewAction>
     
-    init(viewStore: AnyViewStore<ViewState, ViewAction>)
-    func render(_ viewState: ViewState)
+    init(viewStore: ViewStore)
 }
