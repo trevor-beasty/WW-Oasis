@@ -12,6 +12,7 @@ public protocol StoreDefinition: ModuleDefinition {
 }
 
 public protocol StoreType: StoreDefinition, BinderHostType, ObjectBindable where Binder.Value == State {
+    var state: State { get }
     func handleAction(_ action: Action)
     func observeStatefulOutput(_ observer: @escaping (Output, State) -> Void)
 }
@@ -22,13 +23,12 @@ open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definit
     public let binder: SourceBinder<State>
     public let objectBinder = ObjectBinder()
     
-    public static func create(with initialState: State) -> AnyStore<State, Action, Output> {
-        let store = self.init(initialState: initialState)
-        return store.asAnyStore()
+    public init(initialState: State) {
+        self.binder = SourceBinder(initialState)
     }
     
-    public required init(initialState: State) {
-        self.binder = SourceBinder(initialState)
+    public var state: State {
+        return binder.value
     }
     
     public func observeStatefulOutput(_ observer: @escaping (Output, State) -> Void) {

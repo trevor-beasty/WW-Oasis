@@ -33,8 +33,8 @@ open class Module<Action, Output>: ModuleProtocol {
     }
     
     public func output(_ output: Output) {
-        emit {
-            self.outputObservers.forEach({ $0(output) })
+        executeOnMainThread { [weak self] in
+            self?.outputObservers.forEach({ $0(output) })
         }
     }
     

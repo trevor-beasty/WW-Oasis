@@ -30,9 +30,10 @@ public final class SourceBinder<Value>: BinderType {
     internal func set(newValue: Value) {
         let oldValue = value
         value = newValue
-        let _observers = observers
-        DispatchQueue.main.async {
-            _observers.forEach({ $0(oldValue, newValue) })
+        executeOnMainThread { [weak self] in
+            /// Dispatch to all observers which exist at execution time - it is possible that additional
+            /// observers could be added b/w queuing and execution.
+            self?.observers.forEach({ $0(oldValue, newValue) })
         }
     }
     

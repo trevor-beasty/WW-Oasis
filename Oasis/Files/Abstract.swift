@@ -10,10 +10,6 @@ import Foundation
 
 internal let abstractMethodMessage = "abstract method must be overriden by subclass"
 
-internal func emit(_ execute: @escaping () -> Void) {
-    DispatchQueue.main.async(execute: execute)
-}
-
 public enum None { }
 
 public final class WeakBox<T: AnyObject> {
@@ -40,4 +36,15 @@ extension WeakBox {
 internal enum WeakStrong<T: AnyObject> {
     case strong(T)
     case weak(WeakBox<T>)
+}
+
+internal func executeOnMainThread(_ toExecute: @escaping () -> Void) {
+    if Thread.isMainThread {
+        toExecute()
+    }
+    else {
+        DispatchQueue.main.async {
+            toExecute()
+        }
+    }
 }
