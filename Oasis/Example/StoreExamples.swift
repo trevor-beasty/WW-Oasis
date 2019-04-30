@@ -11,15 +11,32 @@ import UIKit
 enum Search: StoreDefinition {
     
     struct State: Equatable {
+        var searchText: String?
+        var items: [Item]
+        var phase: Phase
+        
+        enum Phase: Equatable {
+            case idle
+            case loading
+            case error(message: String)
+        }
         
     }
     
     enum Action: Equatable {
-        
+        case didUpdateSearchText(String?)
+        case didPressClear
+        case didSelectItem(Item)
     }
     
     enum Output: Equatable {
-        
+        case didSelectItem(Item)
+    }
+    
+    struct Item: Equatable {
+        let id: String
+        let name: String
+        let points: Int
     }
     
 }

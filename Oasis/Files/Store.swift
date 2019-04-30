@@ -12,7 +12,6 @@ public protocol StoreDefinition: ModuleDefinition {
 }
 
 public protocol AbstractStoreType: StoreDefinition, BinderHostType, ObjectBindable where Binder.Value == State {
-    var state: State { get }
     func handleAction(_ action: Action)
     func observeStatefulOutput(_ observer: @escaping (Output, State) -> Void)
 }
@@ -31,15 +30,19 @@ open class Store<Definition: StoreDefinition>: Module<Definition.Action, Definit
         self.binder = SourceBinder(initialState)
     }
     
-    public var state: State {
-        return binder.value
-    }
-    
     public func observeStatefulOutput(_ observer: @escaping (Output, State) -> Void) {
         observeOutput({ [weak self] output in
             guard let strongSelf = self else { return }
             observer(output, strongSelf.binder.value)
         })
+    }
+    
+}
+
+extension AbstractStoreType {
+    
+    public var state: State {
+        return binder.value
     }
     
 }

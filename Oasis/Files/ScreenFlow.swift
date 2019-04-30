@@ -17,7 +17,7 @@ class ScreenFlow<Output, ScreenContext: UIViewController>: Module<None, Output> 
 
 }
 
-class UnitaryScreenFlow<Store: StoreType, View: ViewType, ScreenContext: UIViewController>: Module<None, Store.Output> where View: UIViewController {
+class UnitaryScreenFlow<Store: StoreType, View: ViewType, ScreenContext: UIViewController>: Module<None, None> where View: UIViewController {
     
     public private(set) weak var screenContext: ScreenContext?
     public private(set) var store: AnyStore<Store.State, Store.Action, Store.Output>?
