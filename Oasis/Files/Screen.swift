@@ -9,6 +9,10 @@
 import UIKit
 
 open class Screen<Store: StoreType, View: ViewType> where View: UIViewController {
+    public typealias State = Store.State
+    public typealias Action = Store.Action
+    public typealias ViewState = View.ViewState
+    public typealias ViewAction = View.ViewAction
     
     public let store: AnyStore<Store.State, Store.Action, Store.Output>
     public let viewController: UIViewController
@@ -20,11 +24,11 @@ open class Screen<Store: StoreType, View: ViewType> where View: UIViewController
         self.viewController = View.init(viewStore: viewStoreAdapter.asViewStore())
     }
     
-    open class func mapState(_ state: Store.State) -> View.ViewState {
+    open class func mapState(_ state: State) -> ViewState {
         return lassoAbstractMethod()
     }
     
-    open class func mapViewAction(_ viewAction: View.ViewAction) -> Store.Action {
+    open class func mapViewAction(_ viewAction: ViewAction) -> Action {
         return lassoAbstractMethod()
     }
     

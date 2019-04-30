@@ -277,3 +277,20 @@ extension SearchViewController: UISearchBarDelegate {
     }
     
 }
+
+class SearchScreen: Screen<SearchStore, SearchViewController> {
+    
+    override static func mapState(_ state: State) -> ViewState {
+        let error: String?
+        switch state.phase {
+        case .error(message: let message): error = message
+        case .idle, .searching: error = nil
+        }
+        return ViewState(isLoading: state.phase == .searching, error: error, items: state.items, searchText: state.searchText)
+    }
+    
+    override static func mapViewAction(_ viewAction: ViewAction) -> Action {
+        return viewAction
+    }
+    
+}
