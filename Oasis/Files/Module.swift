@@ -25,7 +25,7 @@ open class Module<Action, Output>: ModuleProtocol {
     public init() { }
     
     open func handleAction(_ action: Action) {
-        fatalError(abstractMethodMessage)
+        return lassoAbstractMethod()
     }
     
     public func observeOutput(_ observer: @escaping (Output) -> Void) {

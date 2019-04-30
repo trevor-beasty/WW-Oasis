@@ -8,7 +8,9 @@
 
 import Foundation
 
-internal let abstractMethodMessage = "abstract method must be overriden by subclass"
+internal func lassoAbstractMethod<T>(line: UInt = #line, file: StaticString = #file) -> T {
+    fatalError("abstract method must be overriden by subclass", file: file, line: line)
+}
 
 public enum None { }
 
