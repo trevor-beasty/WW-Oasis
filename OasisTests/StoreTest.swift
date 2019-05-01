@@ -9,15 +9,15 @@
 import XCTest
 @testable import Oasis
 
-public typealias StoreAssertion<T> = (T) -> Bool
+public typealias ValueAssertion<T> = (T) -> Void
 
-fileprivate func storeAssert<T>(_ assertions: [StoreAssertion<T>], on values: [T], file: StaticString = #file, line: UInt = #line) {
+fileprivate func storeAssert<T>(_ assertions: [ValueAssertion<T>], on values: [T]) {
     guard values.count == assertions.count else {
-        XCTFail("bad count - expected \(assertions.count), realized \(values.count)", file: file, line: line)
+        XCTFail("bad count - expected \(assertions.count), realized \(values.count)")
         return
     }
     for (i, assertion) in assertions.enumerated() {
-        XCTAssertTrue(assertion(values[i]), file: file, line: line)
+        assertion(values[i])
     }
 }
 
@@ -47,13 +47,13 @@ public class TestStore<Store: StoreType> {
         outputs = []
     }
     
-    public func assert(when action: Store.Action, stateAssertions: [StoreAssertion<Store.State>]? = nil, outputAssertions: [StoreAssertion<Store.Output>]? = nil, file: StaticString = #file, line: UInt = #line) {
+    public func assert(when action: Store.Action, stateAssertions: [ValueAssertion<Store.State>]? = nil, outputAssertions: [ValueAssertion<Store.Output>]? = nil) {
         store.handleAction(action)
         if let stateAssertions = stateAssertions {
-            storeAssert(stateAssertions, on: self.states, file: file, line: line)
+            storeAssert(stateAssertions, on: self.states)
         }
         if let outputAssertions = outputAssertions {
-            storeAssert(outputAssertions, on: self.outputs, file: file, line: line)
+            storeAssert(outputAssertions, on: self.outputs)
         }
     }
     
@@ -63,19 +63,23 @@ public class TestStore<Store: StoreType> {
     
 }
 
-public class StoreTestGenerator<Store: StoreType> {
+public class StoreTest<Store: StoreType> {
     
+    private let defaultState: Store.State
     private let testCase: XCTestCase
     private let configureInjections: (Store) -> Void
     
-    public init(_ testCase: XCTestCase, configureInjections: @escaping (Store) -> Void) {
+    public init(_ testCase: XCTestCase, defaultState: Store.State, configureInjections: @escaping (Store) -> Void) {
+        self.defaultState = defaultState
         self.testCase = testCase
         self.configureInjections = configureInjections
     }
     
-    public func given(initialState: Store.State) -> Given {
+    public func given(initialState: @escaping (inout Store.State) -> Void) -> Given {
         let makeTestStore: () -> TestStore<Store> = {
-            return TestStore<Store>.init(initialState, configureInjections: self.configureInjections, allowExhaustion: self.testCase.allowMainQueueExhaustion)
+            var copy = self.defaultState
+            initialState(&copy)
+            return TestStore<Store>.init(copy, configureInjections: self.configureInjections, allowExhaustion: self.testCase.allowMainQueueExhaustion)
         }
         return Given(makeTestStore: makeTestStore)
     }
@@ -97,9 +101,9 @@ public class StoreTestGenerator<Store: StoreType> {
             self.toSend = toSend
         }
         
-        public func then(stateAssertions: [StoreAssertion<Store.State>]? = nil, outputAssertions: [StoreAssertion<Store.Output>]? = nil, file: StaticString = #file, line: UInt = #line) {
+        public func then(stateAssertions: [ValueAssertion<Store.State>]? = nil, outputAssertions: [ValueAssertion<Store.Output>]? = nil) {
             let testStore = given.makeTestStore()
-            testStore.assert(when: toSend, stateAssertions: stateAssertions, outputAssertions: outputAssertions, file: file, line: line)
+            testStore.assert(when: toSend, stateAssertions: stateAssertions, outputAssertions: outputAssertions)
         }
     }
     
