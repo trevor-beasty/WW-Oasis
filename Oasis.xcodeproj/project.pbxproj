@@ -27,6 +27,7 @@
 		E25B465B22788D6E00DA207E /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25B465A22788D6E00DA207E /* Screen.swift */; };
 		E25B465D2279DF9E00DA207E /* StoreTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25B465C2279DF9E00DA207E /* StoreTest.swift */; };
 		E298B01B2279EEC700963D3B /* SearchStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E298B01A2279EEC700963D3B /* SearchStoreTests.swift */; };
+		E298B01F227B666300963D3B /* ViewModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = E298B01E227B666300963D3B /* ViewModule.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		E25B465A22788D6E00DA207E /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
 		E25B465C2279DF9E00DA207E /* StoreTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreTest.swift; sourceTree = "<group>"; };
 		E298B01A2279EEC700963D3B /* SearchStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchStoreTests.swift; sourceTree = "<group>"; };
+		E298B01E227B666300963D3B /* ViewModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModule.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +143,7 @@
 				E253AC7B2274B4AE00853431 /* ScreenPlacing.swift */,
 				E253AC822275FEBC00853431 /* ScreenPlacerSink.swift */,
 				E25B465A22788D6E00DA207E /* Screen.swift */,
+				E298B01E227B666300963D3B /* ViewModule.swift */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 				E25B46552277741900DA207E /* StoreExamples.swift in Sources */,
 				E253AC7F2274B5F200853431 /* ScreenFlowExamples.swift in Sources */,
 				E253AC6C227247FF00853431 /* Module.swift in Sources */,
+				E298B01F227B666300963D3B /* ViewModule.swift in Sources */,
 				E253AC6A227247B900853431 /* AnyStore.swift in Sources */,
 				E253AC832275FEBC00853431 /* ScreenPlacerSink.swift in Sources */,
 				E253AC62227242F600853431 /* Store.swift in Sources */,

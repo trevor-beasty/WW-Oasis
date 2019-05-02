@@ -302,7 +302,7 @@ class SearchScreen: Screen<SearchStore, SearchViewController> {
 class TapToSearchFlow: ScreenFlow<None, UINavigationController> {
     
     private weak var navigationController: UINavigationController?
-    private var tapModule: TextControllerModule?
+    private var textModule: TextModule?
     
     override func start(with screenPlacer: ScreenPlacer<UINavigationController>) throws {
         let tap = assembleTap()
@@ -310,10 +310,10 @@ class TapToSearchFlow: ScreenFlow<None, UINavigationController> {
     }
     
     private func assembleTap() -> UIViewController {
-        let tapModule = TextControllerModule.init(color: .blue, text: "Tap to search")
-        tapModule.textController.bind(self)
+        let textController = TextController(color: .blue, text: "Tap to search")
+        let textModule = TextModule(wrapping: textController)
         
-        tapModule.observeOutput() { [weak self] output in
+        textModule.observeOutput() { [weak self] output in
             switch output {
             case .didTap:
                 guard let strongSelf = self else { return }
@@ -322,8 +322,8 @@ class TapToSearchFlow: ScreenFlow<None, UINavigationController> {
             }
         }
         
-        self.tapModule = tapModule
-        return tapModule.textController
+        self.textModule = textModule
+        return textController
     }
     
     private func assembleSearch() -> UIViewController {
@@ -333,9 +333,9 @@ class TapToSearchFlow: ScreenFlow<None, UINavigationController> {
         searchScreen.store.observeStatefulOutput() { [weak self] (output, _) in
             switch output {
             case .didSelectItem(let item):
-                guard let strongSelf = self, let tapModule = strongSelf.tapModule else { return }
-                tapModule.handleAction(.showText(item.name))
-                strongSelf.navigationController?.popToViewController(tapModule.textController, animated: true)
+                guard let strongSelf = self, let textModule = strongSelf.textModule, let textController = textModule.view else { return }
+                textModule.handleAction(.showText(item.name))
+                strongSelf.navigationController?.popToViewController(textController, animated: true)
             }
         }
         

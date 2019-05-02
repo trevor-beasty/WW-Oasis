@@ -139,15 +139,10 @@ enum TextControllerOutput: Equatable {
     case didTap
 }
 
-class TextControllerModule: Module<TextControllerAction, TextControllerOutput> {
+class TextModule: ViewModule<TextController, TextControllerAction, TextControllerOutput> {
     
-    let textController: TextController
-    
-    init(color: UIColor, text: String) {
-        self.textController = TextController(color: color, text: text)
-        super.init()
-        
-        textController.onDidTap = { [weak self] in
+    override func attachTo(_ view: TextController) {
+        view.onDidTap = { [weak self] in
             self?.output(.didTap)
         }
     }
@@ -155,7 +150,7 @@ class TextControllerModule: Module<TextControllerAction, TextControllerOutput> {
     override func handleAction(_ action: TextControllerAction) {
         switch action {
         case .showText(let text):
-            textController.showText(text)
+            view?.showText(text)
         }
     }
     
