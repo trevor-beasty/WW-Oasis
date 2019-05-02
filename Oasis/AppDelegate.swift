@@ -8,6 +8,13 @@
 
 import UIKit
 
+fileprivate enum Option {
+    case searchScreen
+    case complexFlow
+}
+
+fileprivate let option: Option = .searchScreen
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -16,8 +23,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         guard let window = window else { fatalError() }
         let windowPlacer = ScreenPlacement.makeWindowPlacer(window)
-        let myDayFlow = MyDayFlow()
-        try? myDayFlow.start(with: windowPlacer)
+        switch option {
+        case .complexFlow:
+            let myDayFlow = MyDayFlow()
+            try? myDayFlow.start(with: windowPlacer)
+            
+        case .searchScreen:
+            let emptyController = UIViewController()
+            let navigationController = try! windowPlacer
+                .makeNavigationPlacer(UINavigationController())
+                .place(emptyController)
+            let placer = navigationController.makePushPlacer()
+            let tapToSearchFlow = TapToSearchFlow()
+            _ = try! tapToSearchFlow.start(with: placer)
+        }
+
         return true
     }
     

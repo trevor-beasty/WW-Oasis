@@ -31,7 +31,7 @@ class SearchStoreTests: XCTestCase {
         super.tearDown()
     }
     
-    func test_GivenItems_SelectItem_OutputsSelectItem() {
+    func test_GivenItems_WhenSelectItem_OutputsSelectItem() {
         let items: [Search.Item] = [
             Search.Item.init(id: "", name: "foo", points: 0),
             Search.Item.init(id: "", name: "bar", points: 1)
@@ -45,7 +45,7 @@ class SearchStoreTests: XCTestCase {
         )
     }
     
-    func test_GivenViewHasNotAppeared_ViewWillAppear_Searches() {
+    func test_GivenViewHasNotAppeared_WhenViewWillAppear_Searches() {
         let items: [Search.Item] = [
             Search.Item.init(id: "", name: "foo", points: 0),
             Search.Item.init(id: "", name: "bar", points: 1)

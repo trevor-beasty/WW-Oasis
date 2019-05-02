@@ -88,6 +88,8 @@ class TextController: UIViewController, ObjectBindable {
     let color: UIColor
     let text: String
     
+    let label = UILabel()
+    
     init(color: UIColor, text: String) {
         self.color = color
         self.text = text
@@ -98,7 +100,6 @@ class TextController: UIViewController, ObjectBindable {
     required init?(coder aDecoder: NSCoder) { fatalError() }
     
     override func loadView() {
-        let label = UILabel()
         label.text = text
         label.backgroundColor = color
         label.textColor = .white
@@ -122,6 +123,40 @@ class TextController: UIViewController, ObjectBindable {
     
     @objc private func didTap() {
         onDidTap()
+    }
+    
+    func showText(_ text: String?) {
+        label.text = text
+    }
+    
+}
+
+enum TextControllerAction: Equatable {
+    case showText(String?)
+}
+
+enum TextControllerOutput: Equatable {
+    case didTap
+}
+
+class TextControllerModule: Module<TextControllerAction, TextControllerOutput> {
+    
+    let textController: TextController
+    
+    init(color: UIColor, text: String) {
+        self.textController = TextController(color: color, text: text)
+        super.init()
+        
+        textController.onDidTap = { [weak self] in
+            self?.output(.didTap)
+        }
+    }
+    
+    override func handleAction(_ action: TextControllerAction) {
+        switch action {
+        case .showText(let text):
+            textController.showText(text)
+        }
     }
     
 }

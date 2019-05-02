@@ -119,7 +119,11 @@ protocol SearchServiceProtocol: AnyObject {
 class SearchService: SearchServiceProtocol {
     
     func search(_ query: String?, completion: @escaping (Result<[Search.Item]>) -> Void) {
-        
+        let prefixes = ["red", "orange", "blue"]
+        let items = prefixes.map({
+            return Search.Item.init(id: "", name: $0 + " " + (query ?? ""), points: Int.random(in: 0...10))
+        })
+        completion(.success(items))
     }
     
 }
@@ -291,6 +295,51 @@ class SearchScreen: Screen<SearchStore, SearchViewController> {
     
     override static func mapViewAction(_ viewAction: ViewAction) -> Action {
         return viewAction
+    }
+    
+}
+
+class TapToSearchFlow: ScreenFlow<None, UINavigationController> {
+    
+    private weak var navigationController: UINavigationController?
+    private var tapModule: TextControllerModule?
+    
+    override func start(with screenPlacer: ScreenPlacer<UINavigationController>) throws {
+        let tap = assembleTap()
+        self.navigationController = try screenPlacer.place(tap)
+    }
+    
+    private func assembleTap() -> UIViewController {
+        let tapModule = TextControllerModule.init(color: .blue, text: "Tap to search")
+        tapModule.textController.bind(self)
+        
+        tapModule.observeOutput() { [weak self] output in
+            switch output {
+            case .didTap:
+                guard let strongSelf = self else { return }
+                let search = strongSelf.assembleSearch()
+                strongSelf.navigationController?.pushViewController(search, animated: true)
+            }
+        }
+        
+        self.tapModule = tapModule
+        return tapModule.textController
+    }
+    
+    private func assembleSearch() -> UIViewController {
+        let searchScreen = SearchScreen.init(initialState: .init(searchText: nil, items: [], phase: .idle, viewDidAppear: false))
+        searchScreen.store.bind(self)
+        
+        searchScreen.store.observeStatefulOutput() { [weak self] (output, _) in
+            switch output {
+            case .didSelectItem(let item):
+                guard let strongSelf = self, let tapModule = strongSelf.tapModule else { return }
+                tapModule.handleAction(.showText(item.name))
+                strongSelf.navigationController?.popToViewController(tapModule.textController, animated: true)
+            }
+        }
+        
+        return searchScreen.viewController
     }
     
 }
